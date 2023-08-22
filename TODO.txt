@@ -1,0 +1,16 @@
+# TODO list
+## Flight software
+• Add support for mamag payload -Idan
+• Add multithreading to suppoert long samples from payload
+• Merge the two dump commands (by dates and by time)
+• Check the file system code
+• Add eps logic - Adi
+• Update hal and satellite-subsystem - Idan
+• Change the name of the project to TEVEL-2
+• Kill all warning - Adi
+• Add unitests
+After we finish: Delete all implementation and make a new repository
+
+## Ground
+• Update MIB(add mamag commands to TEVEL MIB), upload to repo
+• Command\Telemetry dictionary
