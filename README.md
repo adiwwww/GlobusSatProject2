@@ -16,7 +16,7 @@ The software is based on the documentation provided in [this folder](https://dri
 To get started with the TEVEL-2 Flight Software, please follow these steps:
 
 • Install ISIS-SDK from [here](https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg)
-After installing, the IDE for the project should be in "C:\ISIS\application\eclipse\eclipse.exe", unless you specified otherwise 
+After installing, the IDE for the project should be in ```"C:\ISIS\application\eclipse\eclipse.exe"```, unless you specified otherwise 
 
 • Set a local copy of this GitHub repository. Do so by [forking and cloning the repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo) or [cloning the repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) using GitBash and 
 ```
