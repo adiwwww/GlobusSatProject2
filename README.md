@@ -9,7 +9,7 @@ The following repository contains:
 3. Documentation - playload documentation from TAU-1.
 
 ## Documentation
-The software is based on the documentation provided in [this document](https://drive.google.com/file/d/1S1JTHGlHGBIdDuXs49dvlr_Vj969hPQx/view
+The software is based on the documentation provided in [this folder](https://drive.google.com/file/d/1S1JTHGlHGBIdDuXs49dvlr_Vj969hPQx/view
 ). It is highly recommended that you review this document before working with the software.
 
 ## Getting Started
@@ -20,4 +20,4 @@ To get started with the TEVEL-2 Flight Software, please follow these steps:
 cd LOCAL_REPOSITORY_PATH
 git clone https://github.com/GreenGilad/IML.HUJI.git
 ```
-• install ISIS-SDK from [here] (https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg) and set up your environment as seen in the [ISIS quickstart guide] (https://drive.google.com/file/d/1y2gOld5oa4XrHUUzJRc_xc5E65OoDaRe/view?usp=drive_link)
+• install ISIS-SDK from [here](https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg) and set up your environment as seen in the [ISIS quickstart guide](https://drive.google.com/file/d/1y2gOld5oa4XrHUUzJRc_xc5E65OoDaRe/view?usp=drive_link)
