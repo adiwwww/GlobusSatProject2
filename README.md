@@ -18,6 +18,6 @@ To get started with the TEVEL-2 Flight Software, please follow these steps:
 • Set a local copy of this GitHub repository. Do so by [forking and cloning the repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo) or [cloning the repository](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository) using GitBash and 
 ```
 cd LOCAL_REPOSITORY_PATH
-git clone https://github.com/GreenGilad/IML.HUJI.git
+git clone https://github.com/adiwwww/GlobusSatProject2.git
 ```
 • install ISIS-SDK from [here](https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg) and set up your environment as seen in the [ISIS quickstart guide](https://drive.google.com/file/d/1y2gOld5oa4XrHUUzJRc_xc5E65OoDaRe/view?usp=drive_link)
