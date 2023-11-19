@@ -20,4 +20,4 @@ To get started with the TEVEL-2 Flight Software, please follow these steps:
 cd LOCAL_REPOSITORY_PATH
 git clone https://github.com/adiwwww/GlobusSatProject2.git
 ```
-• install ISIS-SDK from [here](https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg) and set up your environment as seen in the [ISIS quickstart guide](https://drive.google.com/file/d/1y2gOld5oa4XrHUUzJRc_xc5E65OoDaRe/view?usp=drive_link)
+• Install ISIS-SDK from [here](https://drive.google.com/file/d/0B0gJIJIi4GEBcV91cWlNTTQ3Tnc/view?usp=drive_link&resourcekey=0-4HGLfnsb0zMTF5DQNIoXMg) and set up your environment as seen in the [ISIS quickstart guide](https://drive.google.com/file/d/1y2gOld5oa4XrHUUzJRc_xc5E65OoDaRe/view?usp=drive_link)
