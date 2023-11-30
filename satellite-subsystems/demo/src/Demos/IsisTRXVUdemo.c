@@ -102,12 +102,19 @@ static Boolean vutc_sendInputTest(void)
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
 	int error_result;
+	int number = 'A';
+	int i;
 
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
 		printf("\r\n Transmission of user input. \r\n");
 		printf("\r\n Input a message (10 chars) : \r\n");
-		UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
+//		UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
+		UTIL_DbguGetHexa32(&number);
+		for (i = 0; i < 10; ++i)
+			buffer[i] = number;
+
+		printf("Sending buffer: %s\r\n", buffer);
 
 		error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, 10, &avalFrames);
 		print_error(error_result);
