@@ -94,6 +94,39 @@ static Boolean vutc_sendDefClSignTest(void)
 	return TRUE;
 }
 
+static Boolean vutc_sendInputTest(void)
+{
+	//Buffers and variables definition
+	unsigned char buffer[11]  = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40};
+	unsigned char txCounter = 0;
+	unsigned char avalFrames = 0;
+	unsigned int timeoutCounter = 0;
+	int error_result;
+
+	while(txCounter < 5 && timeoutCounter < 5)
+	{
+		printf("\r\n Transmission of user input. \r\n");
+		printf("\r\n Input a message (10 chars) : \r\n");
+		UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
+
+		error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, 10, &avalFrames);
+		print_error(error_result);
+
+		if ((avalFrames != 0)&&(avalFrames != 255))
+		{
+			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
+			txCounter++;
+		}
+		else
+		{
+			vTaskDelay(100 / portTICK_RATE_MS);
+			++timeoutCounter;
+		}
+	}
+
+	return TRUE;
+}
+
 static Boolean vutc_toggleIdleStateTest(void)
 {
 	static Boolean toggle_flag = 0;
@@ -445,9 +478,10 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 	printf("\t 10) (revD) Get command frame by interrupt \n\r");
 	printf("\t 11) (revD) Get receiver telemetry \n\r");
 	printf("\t 12) (revD) Get transmitter telemetry \n\r");
-	printf("\t 13) Return to main menu \n\r");
+	printf("\t 13) User input string transmit \n\r");
+	printf("\t 14) Return to main menu \n\r");
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 13) == 0);
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 14) == 0);
 
 	switch(selection) {
 	case 1:
@@ -487,10 +521,11 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		offerMoreTests = vutc_getTxTelemTest_revD();
 		break;
 	case 13:
-		offerMoreTests = FALSE;
+		offerMoreTests = vutc_sendInputTest();
 		break;
 
 	default:
+		offerMoreTests = FALSE;
 		break;
 	}
 
