@@ -69,7 +69,8 @@ Boolean selectAndExecuteTest()
 		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
 	}
 
-	printf( "\n\r Select the device to be tested to perform: \n\r");
+	printf("\tKafr Qara QubeSat2 Flight Software Test Bed\n\n");
+	printf("Select the module to be tested:\n\r");
 	printf("\t 1) TRXVU test \n\r");
 	printf("\t 2) HSTxS Test \n\r");
 	printf("\t 3) AntS test \n\r");
