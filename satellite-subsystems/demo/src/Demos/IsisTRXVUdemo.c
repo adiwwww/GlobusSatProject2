@@ -102,14 +102,14 @@ static Boolean vutc_sendInputTest(void)
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
 	int error_result;
-	int number = 'A';
+	unsigned int number = 'A';
 	int i;
 
 	printf("\r\n Transmission of user input. \r\n");
 //	printf("\r\n Input a message (10 chars) : \r\n");
 //	UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
 
-	printf("\r\n Input a hex number: \r\n");
+	printf("Input a hex number: ");
 	UTIL_DbguGetHexa32(&number);
 	for (i = 0; i < 10; ++i)
 		buffer[i] = number;
@@ -471,75 +471,46 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	return TRUE;
 }
 
+Boolean quit_menu() { return FALSE; }
+typedef Boolean (*MenuActionPtr)(void);
+
+typedef struct MenuAction {
+	MenuActionPtr action;
+	char const*  menuSelection;
+} MenuAction;
+
+MenuAction trxvu_menu[] = {
+			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
+			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
+			{ vutc_sendDefClSignTest, "Default Callsign Send Tes"},
+			{ vutc_toggleIdleStateTest, "Toggle Idle state"},
+			{ vutc_setTxBitrate9600Test, "Change transmission bitrate to 9600 "},
+			{ vutc_setTxBitrate1200Test, "Change transmission bitrate to 1200"},
+			{ vurc_getFrameCountTest, "Get frame count"},
+			{ vurc_getFrameCmdTest, "Get command frame"},
+			{ vurc_getFrameCmdAndTxTest, "Get command frame and retransmit"},
+			{ vurc_getFrameCmdInterruptTest, "(revD) Get command frame by interrupt"},
+			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
+			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
+			{ vutc_sendInputTest, "User input string transmit"},
+			{ quit_menu, "Return to main menu"}
+};
+
+#define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
+
 static Boolean selectAndExecuteTRXVUDemoTest(void)
 {
-	int selection = 0;
-	Boolean offerMoreTests = TRUE;
-
 	printf( "\n\r Select a test to perform: \n\r");
-	printf("\t 1) Soft Reset TRXVU both microcontrollers \n\r");
-	printf("\t 2) Hard Reset TRXVU both microcontrollers \n\r");
-	printf("\t 3) Default Callsign Send Test\n\r");
-	printf("\t 4) Toggle Idle state \n\r");
-	printf("\t 5) Change transmission bitrate to 9600  \n\r");
-	printf("\t 6) Change transmission bitrate to 1200 \n\r");
-	printf("\t 7) Get frame count \n\r");
-	printf("\t 8) Get command frame \n\r");
-	printf("\t 9) Get command frame and retransmit \n\r");
-	printf("\t 10) (revD) Get command frame by interrupt \n\r");
-	printf("\t 11) (revD) Get receiver telemetry \n\r");
-	printf("\t 12) (revD) Get transmitter telemetry \n\r");
-	printf("\t 13) User input string transmit \n\r");
-	printf("\t 14) Return to main menu \n\r");
-
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 14) == 0);
-
-	switch(selection) {
-	case 1:
-		offerMoreTests = softResetVUTest();
-		break;
-	case 2:
-		offerMoreTests = hardResetVUTest();
-		break;
-	case 3:
-		offerMoreTests = vutc_sendDefClSignTest();
-		break;
-	case 4:
-		offerMoreTests = vutc_toggleIdleStateTest();
-		break;
-	case 5:
-		offerMoreTests = vutc_setTxBitrate9600Test();
-		break;
-	case 6:
-		offerMoreTests = vutc_setTxBitrate1200Test();
-		break;
-	case 7:
-		offerMoreTests = vurc_getFrameCountTest();
-		break;
-	case 8:
-		offerMoreTests = vurc_getFrameCmdTest();
-		break;
-	case 9:
-		offerMoreTests = vurc_getFrameCmdAndTxTest();
-		break;
-    case 10:
-        offerMoreTests = vurc_getFrameCmdInterruptTest();
-        break;
-	case 11:
-		offerMoreTests = vurc_getRxTelemTest_revD();
-		break;
-	case 12:
-		offerMoreTests = vutc_getTxTelemTest_revD();
-		break;
-	case 13:
-		offerMoreTests = vutc_sendInputTest();
-		break;
-
-	default:
-		offerMoreTests = FALSE;
-		break;
+	for (unsigned int i = 0; i < ARRAY_SIZE(trxvu_menu); ++i) {
+		printf("\t %-2d) %s\r\n", i+1, trxvu_menu[i].menuSelection);
 	}
 
+	int selection = 0;
+	while(UTIL_DbguGetIntegerMinMax(&selection, 1, ARRAY_SIZE(trxvu_menu)) == 0){
+		;
+	}
+
+	Boolean offerMoreTests = trxvu_menu[selection].action();
 	return offerMoreTests;
 }
 
