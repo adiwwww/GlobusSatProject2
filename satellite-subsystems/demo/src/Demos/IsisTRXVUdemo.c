@@ -105,31 +105,35 @@ static Boolean vutc_sendInputTest(void)
 	int number = 'A';
 	int i;
 
+	printf("\r\n Transmission of user input. \r\n");
+//	printf("\r\n Input a message (10 chars) : \r\n");
+//	UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
+
+	printf("\r\n Input a hex number: \r\n");
+	UTIL_DbguGetHexa32(&number);
+	for (i = 0; i < 10; ++i)
+		buffer[i] = number;
+	buffer[10] = 0;
+
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
-		printf("\r\n Transmission of user input. \r\n");
-		printf("\r\n Input a message (10 chars) : \r\n");
-//		UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
-		UTIL_DbguGetHexa32(&number);
-		for (i = 0; i < 10; ++i)
-			buffer[i] = number;
-
-		printf("Sending buffer: %s\r\n", buffer);
-
+		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
 		error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, 10, &avalFrames);
 		print_error(error_result);
 
 		if ((avalFrames != 0)&&(avalFrames != 255))
 		{
 			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
-			txCounter++;
+			++txCounter;
 		}
 		else
 		{
-			vTaskDelay(100 / portTICK_RATE_MS);
+			vTaskDelay(200 / portTICK_RATE_MS);
 			++timeoutCounter;
 		}
+		vTaskDelay(100 / portTICK_RATE_MS);
 	}
+
 
 	return TRUE;
 }
