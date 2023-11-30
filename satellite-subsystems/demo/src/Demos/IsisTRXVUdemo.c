@@ -505,12 +505,12 @@ static Boolean selectAndExecuteTRXVUDemoTest(void)
 		printf("\t %-2d) %s\r\n", i+1, trxvu_menu[i].menuSelection);
 	}
 
-	int selection = 0;
+	unsigned int selection = 0;
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, ARRAY_SIZE(trxvu_menu)) == 0){
 		;
 	}
 
-	Boolean offerMoreTests = trxvu_menu[selection].action();
+	Boolean offerMoreTests = trxvu_menu[selection-1].action();
 	return offerMoreTests;
 }
 
