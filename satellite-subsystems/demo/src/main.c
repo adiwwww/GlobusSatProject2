@@ -114,27 +114,16 @@ Boolean selectAndExecuteTest()
 
 void taskMain()
 {
-	Boolean offerMoreTests = FALSE;
-
 	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
 
-	while(1)
-	{
+	do {
 		LED_toggle(led_1);
+	} while(selectAndExecuteTest());
 
-		offerMoreTests = selectAndExecuteTest();
-
-		if(offerMoreTests == FALSE)
-		{
-			break;
-		}
-	}
-
-	while(1) {
+	for(;;) {
 		LED_toggle(led_1);
 		vTaskDelay(500);
 	}
-
 }
 
 int main()

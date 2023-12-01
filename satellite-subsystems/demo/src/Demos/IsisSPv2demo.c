@@ -1,5 +1,7 @@
 #include "IsisSPdemo.h"
 
+#include "menu_selection.h"
+
 #include <satellite-subsystems/IsisSolarPanelv2.h>
 
 #include <freertos/FreeRTOS.h>
@@ -52,48 +54,10 @@ Boolean SolarPanelv2_Temperature()
 	return TRUE;
 }
 
-Boolean selectAndExecuteSolarPanelsv2DemoTest()
-{
-	int selection = 0;
-	Boolean offerMoreTests = TRUE;
-
-	printf("\n\r Select a test to perform: \n\r");
-	printf("\t 1) Solar Panel Temperature \n\r");
-	printf("\t 2) Return to main menu \n\r");
-
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 2) == 0);
-
-	switch(selection)
-	{
-	case 1:
-		offerMoreTests = SolarPanelv2_Temperature();
-		break;
-	case 2:
-		offerMoreTests = FALSE;
-		break;
-
-	default:
-		break;
-	}
-
-	return offerMoreTests;
-}
-
-void SolarPanelsv2_mainDemo()
-{
-	Boolean offerMoreTests = FALSE;
-
-	while(1)
-	{
-		offerMoreTests = selectAndExecuteSolarPanelsv2DemoTest();
-
-		if(offerMoreTests == FALSE)
-		{
-			break;
-		}
-	}
-}
-
+static MenuAction menu[] = {
+		{SolarPanelv2_Temperature, "Solar Panel Temperature"},
+		RETURN_TO_PREVIOUS_MENU
+};
 
 Boolean SolarPanelv2test()
 {
@@ -111,7 +75,7 @@ Boolean SolarPanelv2test()
 		TRACE_WARNING("\n\r IsisSolarPaneltest: IsisSolarPanelv2_sleep returned %d! \n\r", retValInt);
 	}
 
-	SolarPanelsv2_mainDemo();
+	MenuDisplay(menu, ARRAY_SIZE(menu));
 
 	return TRUE;
 }

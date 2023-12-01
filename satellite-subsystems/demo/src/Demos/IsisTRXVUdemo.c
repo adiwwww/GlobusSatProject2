@@ -6,6 +6,7 @@
  */
 
 #include "common.h"
+#include "menu_selection.h"
 #include "trxvu_frame_ready.h"
 
 #include <freertos/FreeRTOS.h>
@@ -471,15 +472,16 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	return TRUE;
 }
 
-Boolean quit_menu() { return FALSE; }
-typedef Boolean (*MenuActionPtr)(void);
+//Boolean quit_menu() { return FALSE; }
+//typedef Boolean (*MenuActionPtr)(void);
+//
+//typedef struct MenuAction {
+//	MenuActionPtr action;
+//	char const*  menuSelection;
+//} MenuAction;
+//
 
-typedef struct MenuAction {
-	MenuActionPtr action;
-	char const*  menuSelection;
-} MenuAction;
-
-MenuAction trxvu_menu[] = {
+static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
 			{ vutc_sendDefClSignTest, "Default Callsign Send Tes"},
@@ -493,26 +495,8 @@ MenuAction trxvu_menu[] = {
 			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
 			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
 			{ vutc_sendInputTest, "User input string transmit"},
-			{ quit_menu, "Return to main menu"}
+			RETURN_TO_PREVIOUS_MENU
 };
-
-#define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
-
-static Boolean selectAndExecuteTRXVUDemoTest(void)
-{
-	printf( "\n\r Select a test to perform: \n\r");
-	for (unsigned int i = 0; i < ARRAY_SIZE(trxvu_menu); ++i) {
-		printf("\t %-2d) %s\r\n", i+1, trxvu_menu[i].menuSelection);
-	}
-
-	unsigned int selection = 0;
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, ARRAY_SIZE(trxvu_menu)) == 0){
-		;
-	}
-
-	Boolean offerMoreTests = trxvu_menu[selection-1].action();
-	return offerMoreTests;
-}
 
 static void _WatchDogKickTask(void *parameters)
 {
@@ -562,36 +546,12 @@ Boolean IsisTRXVUdemoInit(void)
 	return TRUE;
 }
 
-void IsisTRXVUdemoLoop(void)
-{
-	Boolean offerMoreTests = FALSE;
-
-	while(1)
-	{
-		offerMoreTests = selectAndExecuteTRXVUDemoTest();	// show the demo command line interface and handle commands
-
-		if(offerMoreTests == FALSE)							// was exit/back selected?
-		{
-			break;
-		}
-	}
-}
-
-Boolean IsisTRXVUdemoMain(void)
-{
-	if(IsisTRXVUdemoInit())									// initialize of I2C and IsisTRXVU subsystem drivers succeeded?
-	{
-		IsisTRXVUdemoLoop();								// show the main IsisTRXVU demo interface and wait for user input
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
-}
-
 Boolean TRXVUtest(void)
 {
-	IsisTRXVUdemoMain();
+	// initialize of I2C and IsisTRXVU subsystem drivers succeeded?
+	if (IsisTRXVUdemoInit())
+	{
+		MenuDisplay(trxvu_menu, ARRAY_SIZE(trxvu_menu));
+	}
 	return TRUE;
 }
