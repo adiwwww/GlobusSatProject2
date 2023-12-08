@@ -98,14 +98,13 @@ static Boolean vutc_sendDefClSignTest(void)
 static Boolean vutc_sendInputTest(void)
 {
 	//Buffers and variables definition
-	unsigned char buffer[1]  = {0}; //{0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40};
+	unsigned char buffer[16]  = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40,' ', ' ', '!', '!', 0};
 	unsigned char txCounter = 0;
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
 
 	printf("\r\n Transmission of user input. \r\n");
-
-	printf("Input a up to 10 hex numbers: ");
+	printf("Input a up to 10 hex numbers: \r\n");
 	GetHexBuffer(buffer, ARRAY_SIZE(buffer)-1);
 
 	while(txCounter < 5 && timeoutCounter < 5)
