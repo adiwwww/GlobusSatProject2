@@ -39,6 +39,15 @@ Boolean MenuDisplay(MenuAction menu[])
 	return FALSE;
 }
 
+unsigned int GetNumberInRange(int min, int max)
+{
+	int selection;
+	while(UTIL_DbguGetIntegerMinMax(&selection, min, max) == 0){
+			;
+	}
+	return selection;
+}
+
 void GetHexBuffer(unsigned char* buffer, unsigned int size)
 {
 	unsigned int input;

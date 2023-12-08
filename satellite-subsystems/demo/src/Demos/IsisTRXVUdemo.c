@@ -6,6 +6,7 @@
  */
 
 #include "common.h"
+#include "input.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
 
@@ -464,10 +465,34 @@ static Boolean vutc_getTxTelemTest_revD(void)
 
 static Boolean test_getstring(void)
 {
-	char buffer[32] = {'?', 0};
+	unsigned char buffer[32] = {'?', 0};
 	printf("Enter a message(30): \r\n");
-	UTIL_DbguGetString(buffer, ARRAY_SIZE(buffer)-1);
+	INPUT_GetSTRING("Enter message: ", (char*)buffer, ARRAY_SIZE(buffer)-1);
 	printf("You wrote: %s \r\n", buffer);
+
+	unsigned char txCounter = 0;
+	unsigned char avalFrames = 0;
+	unsigned int timeoutCounter = 0;
+
+	while(txCounter < 5 && timeoutCounter < 5)
+	{
+		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
+		int error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer)*sizeof(int), &avalFrames);
+		print_error(error_result);
+
+		if ((avalFrames != 0)&&(avalFrames != 255))
+		{
+			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
+			++txCounter;
+		}
+		else
+		{
+			vTaskDelay(200 / portTICK_RATE_MS);
+			++timeoutCounter;
+		}
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+
 	return TRUE;
 }
 
@@ -484,9 +509,9 @@ static MenuAction trxvu_menu[] = {
 			{ vurc_getFrameCmdInterruptTest, "(revD) Get command frame by interrupt"},
 			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
 			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
-			{ vutc_sendInputTest, "User input string transmit"},
+			{ vutc_sendInputTest, "Transmit message written by user"},
 			{ test_getstring, "Test read string" },
-			RETURN_TO_PREVIOUS_MENU
+			MENU_ITEM_END
 };
 
 static void _WatchDogKickTask(void *parameters)

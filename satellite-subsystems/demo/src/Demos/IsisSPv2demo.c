@@ -56,7 +56,7 @@ Boolean SolarPanelv2_Temperature()
 
 static MenuAction menu[] = {
 		{SolarPanelv2_Temperature, "Solar Panel Temperature"},
-		RETURN_TO_PREVIOUS_MENU
+		MENU_ITEM_END
 };
 
 Boolean SolarPanelv2test()
