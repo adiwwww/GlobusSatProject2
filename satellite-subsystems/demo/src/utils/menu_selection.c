@@ -39,14 +39,16 @@ Boolean MenuDisplay(MenuAction menu[])
 	return FALSE;
 }
 
-unsigned GetHexBuffer(unsigned int* buffer, unsigned int size)
+void GetHexBuffer(unsigned char* buffer, unsigned int size)
 {
-	for (int i = 0; i < size; ++i) {
-		if ( 0 == UTIL_DbguGetHexa32(&buffer[i]) ) {
-			return i;
+	int input;
+	for (unsigned int i = 0; i < size; ++i) {
+		if ( 0 == UTIL_DbguGetHexa32(&input) ) {
+			buffer[i] = 0;
+			break;
 		}
+		buffer[i] = input;
 	}
-	return size;
 }
 
 

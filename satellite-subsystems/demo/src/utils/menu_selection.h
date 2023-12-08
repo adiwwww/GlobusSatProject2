@@ -32,6 +32,6 @@ Boolean MenuSelectAndExecute(MenuAction menu[]);
 
 Boolean MenuDisplay(MenuAction menu[]);
 
-unsigned GetHexBuffer(unsigned int* buffer, unsigned int size);
+void GetHexBuffer(unsigned char* buffer, unsigned int size);
 
 #endif /* DEMOS_MENU_SELECTION_H_ */
