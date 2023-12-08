@@ -41,7 +41,7 @@ Boolean MenuDisplay(MenuAction menu[])
 
 void GetHexBuffer(unsigned char* buffer, unsigned int size)
 {
-	int input;
+	unsigned int input;
 	for (unsigned int i = 0; i < size; ++i) {
 		if ( 0 == UTIL_DbguGetHexa32(&input) ) {
 			buffer[i] = 0;

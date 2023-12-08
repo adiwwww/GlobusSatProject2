@@ -468,7 +468,9 @@ static Boolean test_getstring(void)
 	printf("Enter a message(30): \r\n");
 	UTIL_DbguGetString(buffer, ARRAY_SIZE(buffer)-1);
 	printf("You wrote: %s \r\n", buffer);
+	return TRUE;
 }
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
