@@ -18,9 +18,10 @@ Boolean MenuSelectAndExecute(MenuAction menu[])
 	int selection = 0;
 	int index = 0;
 	printf( "\n\r Select a test to perform: \n\r");
-	while (menu->action) {
-		printf("\t %-2d) %s\r\n", ++index, menu->menuSelection);
-		++menu;
+	MenuAction* pmenu = menu;
+	while (pmenu->action) {
+		printf("\t %-2d) %s\r\n", ++index, pmenu->menuSelection);
+		++pmenu;
 	}
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, index) == 0){
@@ -46,7 +47,6 @@ unsigned GetHexBuffer(unsigned int* buffer, unsigned int size)
 			return i;
 		}
 	}
-
 	return size;
 }
 
