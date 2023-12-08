@@ -98,29 +98,20 @@ static Boolean vutc_sendDefClSignTest(void)
 static Boolean vutc_sendInputTest(void)
 {
 	//Buffers and variables definition
-	unsigned char buffer[11]  = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40};
+	unsigned int buffer[10]  = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40};
 	unsigned char txCounter = 0;
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
-	int error_result;
-	unsigned int number = 'A';
-	int i;
 
 	printf("\r\n Transmission of user input. \r\n");
-//	printf("\r\n Input a message (10 chars) : \r\n");
-//	UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
 
 	printf("Input a up to 10 hex numbers: ");
 	GetHexBuffer(buffer, ARRAY_SIZE(buffer));
-//	UTIL_DbguGetHexa32(&number);
-//	for (i = 0; i < 10; ++i)
-//		buffer[i] = number;
-//	buffer[10] = 0;
 
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
 		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
-		error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, 10, &avalFrames);
+		int error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer)*sizeof(int), &avalFrames);
 		print_error(error_result);
 
 		if ((avalFrames != 0)&&(avalFrames != 255))
@@ -472,15 +463,13 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	return TRUE;
 }
 
-//Boolean quit_menu() { return FALSE; }
-//typedef Boolean (*MenuActionPtr)(void);
-//
-//typedef struct MenuAction {
-//	MenuActionPtr action;
-//	char const*  menuSelection;
-//} MenuAction;
-//
-
+static Boolean test_getstring(void)
+{
+	char buffer[32] = {'?', 0};
+	printf("Enter a message(30): \r\n");
+	UTIL_DbguGetString(buffer, ARRAY_SIZE(buffer)-1);
+	printf("You wrote: %s \r\n", buffer);
+}
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -495,6 +484,7 @@ static MenuAction trxvu_menu[] = {
 			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
 			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
 			{ vutc_sendInputTest, "User input string transmit"},
+			{ test_getstring, "Test read string" },
 			RETURN_TO_PREVIOUS_MENU
 };
 
