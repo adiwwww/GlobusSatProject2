@@ -6,7 +6,7 @@
  */
 
 #include "common.h"
-#include "menu_selection.h"
+#include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
 
 #include <freertos/FreeRTOS.h>
@@ -110,11 +110,12 @@ static Boolean vutc_sendInputTest(void)
 //	printf("\r\n Input a message (10 chars) : \r\n");
 //	UTIL_DbguGetString((char*)buffer, sizeof(buffer)-1);
 
-	printf("Input a hex number: ");
-	UTIL_DbguGetHexa32(&number);
-	for (i = 0; i < 10; ++i)
-		buffer[i] = number;
-	buffer[10] = 0;
+	printf("Input a up to 10 hex numbers: ");
+	GetHexBuffer(buffer, ARRAY_SIZE(buffer));
+//	UTIL_DbguGetHexa32(&number);
+//	for (i = 0; i < 10; ++i)
+//		buffer[i] = number;
+//	buffer[10] = 0;
 
 	while(txCounter < 5 && timeoutCounter < 5)
 	{
@@ -134,7 +135,6 @@ static Boolean vutc_sendInputTest(void)
 		}
 		vTaskDelay(100 / portTICK_RATE_MS);
 	}
-
 
 	return TRUE;
 }
@@ -551,7 +551,7 @@ Boolean TRXVUtest(void)
 	// initialize of I2C and IsisTRXVU subsystem drivers succeeded?
 	if (IsisTRXVUdemoInit())
 	{
-		MenuDisplay(trxvu_menu, ARRAY_SIZE(trxvu_menu));
+		MenuDisplay(trxvu_menu);
 	}
 	return TRUE;
 }

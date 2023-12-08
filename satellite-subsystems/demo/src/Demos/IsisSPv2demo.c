@@ -1,6 +1,6 @@
 #include "IsisSPdemo.h"
 
-#include "menu_selection.h"
+#include "utils/menu_selection.h"
 
 #include <satellite-subsystems/IsisSolarPanelv2.h>
 
@@ -75,7 +75,7 @@ Boolean SolarPanelv2test()
 		TRACE_WARNING("\n\r IsisSolarPaneltest: IsisSolarPanelv2_sleep returned %d! \n\r", retValInt);
 	}
 
-	MenuDisplay(menu, ARRAY_SIZE(menu));
+	MenuDisplay(menu);
 
 	return TRUE;
 }
