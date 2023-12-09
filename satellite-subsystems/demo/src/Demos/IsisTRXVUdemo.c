@@ -463,7 +463,7 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	return TRUE;
 }
 
-static Boolean test_getstring(void)
+static Boolean SendTextMessage(void)
 {
 	unsigned char buffer[32] = {'?', 0};
 	printf("Enter a message(30): \r\n");
@@ -496,6 +496,19 @@ static Boolean test_getstring(void)
 	return TRUE;
 }
 
+static Boolean demo_test(void)
+{
+	printf("Demo test \r\n");
+	printf("Enter a number:\r\n");
+	int number = 0;
+
+	while (UTIL_DbguGetInteger(&number) == 0);
+	int square = number * number;
+	printf("the square of %d is %d\r\n", number, square);
+
+	return TRUE;
+}
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -509,8 +522,9 @@ static MenuAction trxvu_menu[] = {
 			{ vurc_getFrameCmdInterruptTest, "(revD) Get command frame by interrupt"},
 			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
 			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
-			{ vutc_sendInputTest, "Transmit message written by user"},
-			{ test_getstring, "Test read string" },
+			{ vutc_sendInputTest, "Transmit Hex message written by user"},
+			{ SendTextMessage, "Transmit text message written by user" },
+			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
 
