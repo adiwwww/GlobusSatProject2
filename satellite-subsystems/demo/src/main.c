@@ -18,6 +18,9 @@
 #include "Demos/isis_eps_demo.h"
 #include "Demos/tausat2_pdhudemo.h"
 #include "Demos/SystemC.h"
+
+#include "utils/menu_selection.h"
+
 #include <satellite-subsystems/version/version.h>
 
 #include <at91/utility/exithandler.h>
@@ -58,11 +61,19 @@
 	#define MAIN_TRACE_FATAL		TRACE_FATAL
 #endif
 
+static MenuAction main_menu[] = {
+			{ TRXVUtest, "TRXVU Tests"},
+			{ HSTxStest, "HSTxS Tests"},
+			{ AntStest, "Antenna Tests"},
+			{ SolarPanelv2test, "Solar Panels Tests"},
+			{ IsisMTQv2test, "MTQ V2 Tests"},
+			{ isis_eps__test, "ISIS EPS Tests"},
+			{ SystemCTest, "System C Tests"},
+			END_OF_MENU
+};
+
 Boolean selectAndExecuteTest()
 {
-	int selection = 0;
-	Boolean offerMoreTests = TRUE;
-
 	//Initialize the I2C
 	int retValInt = I2C_start(100000, 10);
 	if(retValInt != 0)
@@ -71,54 +82,24 @@ Boolean selectAndExecuteTest()
 	}
 
 	printf("\tKafr Qara QubeSat2 Flight Software Test Bed\n\n");
-	printf("Select the module to be tested:\n\r");
-	printf("\t 1) TRXVU test \n\r");
-	printf("\t 2) HSTxS Test \n\r");
-	printf("\t 3) AntS test \n\r");
-	printf("\t 4) Solar Panels V2 test \n\r");
-	printf("\t 5) MTQv2 test \n\r");
-	printf("\t 6) ISIS EPS Test \n\r");
-	printf("\t 7) TAUSAT2 PDHU test\n\r");
-	printf("\t 8) System & C Tests\n\r");
+	MenuDisplay(main_menu);
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 8) == 0);
+	return TRUE;
+}
 
-	switch(selection)
+static void init_i2c(void)
+{
+	int retValInt = I2C_start(100000, 10);
+	if(retValInt != 0)
 	{
-		case 1:
-			offerMoreTests = TRXVUtest();
-			break;
-		case 2:
-			offerMoreTests = HSTxStest();
-			break;
-		case 3:
-			offerMoreTests = AntStest();
-			break;
-		case 4:
-			offerMoreTests = SolarPanelv2test();
-			break;
-		case 5:
-			offerMoreTests = IsisMTQv2test();
-			break;
-		case 6:
-			offerMoreTests = isis_eps__test();
-			break;
-		case 7:
-			offerMoreTests = TAUSAT2PdhuDemoMain();
-			break;
-		case 8:
-			offerMoreTests = SystemCTest();
-			break;
-		default:
-			break;
+		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
 	}
-
-	return offerMoreTests;
 }
 
 void taskMain()
 {
 	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
+	init_i2c();
 
 	do {
 		LED_toggle(led_1);
