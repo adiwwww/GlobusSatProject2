@@ -8,6 +8,7 @@
  *      Author: tryfinally
  */
 
+#include <stdint.h>
 #include <hal/boolean.h>
 
 /**
@@ -19,5 +20,12 @@ Boolean trxvu_activate_responder(void);
  * Deactivate ISIS TRXVU Responder mode
  */
 Boolean trxvu_deactivate_responder(void);
+
+/**
+ * Set RSSI Transponder Threshold
+ * @param threshold RSSI threshold value. between 0 and 4095.
+ * @return
+ */
+Boolean trxvu_set_responder_rssi_threshold(uint16_t rssi);
 
 #endif /* UTILS_RESPONDER_H_ */
