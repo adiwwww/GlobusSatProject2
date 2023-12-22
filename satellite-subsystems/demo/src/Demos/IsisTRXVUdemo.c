@@ -582,9 +582,14 @@ static Boolean responder_set_rssi(void)
 
 static Boolean beacon_test(void)
 {
-	printf("TRXVU Telemetry.\r\n");
-
-	IsisTrxvu_rcGetTelemetryAll_revC()
+	static unsigned char fromCallSign[7] = {'I', 'K', 'Q', 'H', 'S', '1', 0};
+	static unsigned char toCallSign[7] = {'I', 'K', 'Q', 'G', 'S', '2', 0};
+	static unsigned char data[82] = "KQ Cube Sat Lost in Space, abducted by grumpy old green aliens!";
+	printf("TRXVU Beacon test.\r\n");
+	INPUT_GetSTRING("Beacon Message (max 80 chars): ", data, sizeof(data));
+	unsigned short interval = INPUT_GetUINT16("Becon interval in seconds: ");
+	int r = IsisTrxvu_tcSetAx25BeaconOvrClSign(0, fromCallSign, toCallSign, data, sizeof(data), interval);
+	print_error(r);
 	return TRUE;
 }
 
