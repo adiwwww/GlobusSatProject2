@@ -10,6 +10,7 @@
 #include "input.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
+#include "config/i2c_address.h"
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
@@ -426,10 +427,12 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	}
 
 	telemetryValue = telemetry.fields.tx_reflpwr;
+	printf("RF reflected power ADC: %d.\r\n", telemetryValue);
 	eng_value = ((float)(telemetryValue * telemetryValue)) * 5.887E-5;
 	printf("RF reflected power = %f mW\r\n", eng_value);
 
 	telemetryValue = telemetry.fields.tx_fwrdpwr;
+	printf("RF forward power ADC: %d.\r\n", telemetryValue);
 	eng_value = ((float)(telemetryValue * telemetryValue)) * 5.887E-5;
 	printf("RF forward power = %f mW\r\n", eng_value);
 
@@ -579,7 +582,10 @@ static Boolean responder_set_rssi(void)
 
 static Boolean beacon_test(void)
 {
+	printf("TRXVU Telemetry.\r\n");
 
+	IsisTrxvu_rcGetTelemetryAll_revC()
+	return TRUE;
 }
 
 static MenuAction trxvu_menu[] = {
@@ -628,8 +634,8 @@ Boolean IsisTRXVUdemoInit(void)
     int rv;
 
 	//I2C addresses defined
-	myTRXVUAddress[0].addressVu_rc = 0x60;
-	myTRXVUAddress[0].addressVu_tc = 0x61;
+	myTRXVUAddress[0].addressVu_rc = TRXVU_RC_ADDRESS;
+	myTRXVUAddress[0].addressVu_tc = TRXVU_TC_ADDRESS;
 
 	//Buffer definition
 	myTRXVUBuffers[0].maxAX25frameLengthTX = SIZE_TXFRAME;
