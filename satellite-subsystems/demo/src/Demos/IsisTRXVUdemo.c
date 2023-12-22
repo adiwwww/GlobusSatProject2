@@ -510,15 +510,6 @@ static Boolean demo_test(void)
 	return TRUE;
 }
 
-static void ShutdownResponderTask(void *parameters)
-{
-	int milli_seconds = *(unsigned int*) parameters;
-	vTaskDelay(milli_seconds / portTICK_RATE_MS);
-	//now deactivate responder
-	trxvu_deactivate_responder();
-	vTaskDelete(NULL);
-}
-
 static Boolean activateResponderTest(void)
 {
 	printf("Activate the responder \r\n");
@@ -540,6 +531,18 @@ static Boolean deActivateResponderTest(void)
 		printf("Could not turn responder OFF.\r\n");
 	}
 	return TRUE;
+}
+
+static void ShutdownResponderTask(void *parameters)
+{
+	int milli_seconds = *(unsigned int*) parameters;
+	vTaskDelay(milli_seconds / portTICK_RATE_MS);
+	if (trxvu_deactivate_responder()){
+		printf("Responder deactivated by task.\r\n");
+	} else {
+		printf("Task could not turn responder OFF.\r\n");
+	}
+	vTaskDelete(NULL);
 }
 
 static Boolean activateResponderAutoTest(void)
