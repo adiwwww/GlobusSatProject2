@@ -593,6 +593,13 @@ static Boolean beacon_test(void)
 	return TRUE;
 }
 
+static Boolean clear_beacon_test(void)
+{
+	int r = IsisTrxuv_itcClearBeacon(0);
+	print_error(r);
+	return TRUE;
+}
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -613,6 +620,7 @@ static MenuAction trxvu_menu[] = {
 			{ activateResponderAutoTest, "Activate responder for time interval" },
 			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
 			{ beacon_test, "Beacon Test"},
+			{ clear_beacon_test, "Clear the beacon"},
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
