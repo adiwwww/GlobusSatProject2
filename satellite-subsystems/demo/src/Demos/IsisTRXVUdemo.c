@@ -469,13 +469,15 @@ static Boolean SendTextMessage(void)
 	unsigned char buffer[32] = {'?', 0};
 	printf("Enter a message(30): \r\n");
 	INPUT_GetSTRING("Enter message: ", (char*)buffer, ARRAY_SIZE(buffer)-1);
-	printf("You wrote: %s \r\n", buffer);
+	unsigned int repeats = INPUT_GetUINT8("How many times do you want to send this: ");
+	printf("Will send: %s \r\n", buffer);
+	printf("    Times: %d \r\n", repeats);
 
 	unsigned char txCounter = 0;
 	unsigned char avalFrames = 0;
 	unsigned int timeoutCounter = 0;
 
-	while(txCounter < 5 && timeoutCounter < 5)
+	while(txCounter < repeats && timeoutCounter < repeats)
 	{
 		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
 		int error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer)*sizeof(int), &avalFrames);
@@ -572,6 +574,12 @@ static Boolean responder_set_rssi(void)
 {
 	uint16_t rssi = INPUT_GetUINT16("Enter an RSSI value between 0 and 4095: ");
 	trxvu_set_responder_rssi_threshold(rssi);
+	return TRUE;
+}
+
+static Boolean beacon_test(void)
+{
+
 }
 
 static MenuAction trxvu_menu[] = {
@@ -593,6 +601,7 @@ static MenuAction trxvu_menu[] = {
 			{ deActivateResponderTest, "Deactivate responder" },
 			{ activateResponderAutoTest, "Activate responder for time interval" },
 			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
+			{ beacon_test, "Beacon Test"},
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
