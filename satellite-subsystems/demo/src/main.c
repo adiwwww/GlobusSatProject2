@@ -17,6 +17,7 @@
 #include "Demos/IsisHSTxSdemo.h"
 #include "Demos/isis_eps_demo.h"
 #include "Demos/tausat2_pdhudemo.h"
+#include "Demos/SystemC.h"
 #include <satellite-subsystems/version/version.h>
 
 #include <at91/utility/exithandler.h>
@@ -78,6 +79,7 @@ Boolean selectAndExecuteTest()
 	printf("\t 5) MTQv2 test \n\r");
 	printf("\t 6) ISIS EPS Test \n\r");
 	printf("\t 7) TAUSAT2 PDHU test\n\r");
+	printf("\t 8) System & C Tests\n\r");
 
 	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 7) == 0);
 
@@ -104,7 +106,9 @@ Boolean selectAndExecuteTest()
 		case 7:
 			offerMoreTests = TAUSAT2PdhuDemoMain();
 			break;
-
+		case 8:
+			offerMoreTests = SystemCTest();
+			break;
 		default:
 			break;
 	}
