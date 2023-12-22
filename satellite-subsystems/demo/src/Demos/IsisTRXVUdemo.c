@@ -565,6 +565,12 @@ static Boolean activateResponderAutoTest(void)
 	return TRUE;
 }
 
+static Boolean responder_set_rssi(void)
+{
+	uint16_t rssi = INPUT_GetUINT16("Enter an RSSI value between 0 and 4095: ");
+	trxvu_set_responder_rssi_threshold(rssi);
+}
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -583,6 +589,7 @@ static MenuAction trxvu_menu[] = {
 			{ activateResponderTest, "Activate responder" },
 			{ deActivateResponderTest, "Deactivate responder" },
 			{ activateResponderAutoTest, "Activate responder for time interval" },
+			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
