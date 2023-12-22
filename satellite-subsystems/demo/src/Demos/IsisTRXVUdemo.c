@@ -514,12 +514,35 @@ static void ShutdownResponderTask(void *parameters)
 {
 	int milli_seconds = *(unsigned int*) parameters;
 	vTaskDelay(milli_seconds / portTICK_RATE_MS);
-	//TODO: now deactivate responder
+	//now deactivate responder
 	trxvu_deactivate_responder();
 	vTaskDelete(NULL);
 }
 
 static Boolean activateResponderTest(void)
+{
+	printf("Activate the responder \r\n");
+	if (trxvu_activate_responder()){
+		printf("Responder is ON.\r\n");
+	} else {
+		printf("Could not turn responder ON.\r\n");
+	}
+
+	return TRUE;
+}
+
+static Boolean deActivateResponderTest(void)
+{
+	printf("Deactivate the responder \r\n");
+	if (trxvu_deactivate_responder()){
+		printf("Responder is OFF.\r\n");
+	} else {
+		printf("Could not turn responder OFF.\r\n");
+	}
+	return TRUE;
+}
+
+static Boolean activateResponderAutoTest(void)
 {
 	// DOC: ISIS.TrxVU.ICD.001_v1.6 - TRXVU Interface Control Document_revD
 	// DOC: ISIS-TRXVU-ICD-00001A-ANNEX_A_TRXVU_transponder_mode-1_0
@@ -528,18 +551,16 @@ static Boolean activateResponderTest(void)
 	static xTaskHandle deactivateResponderTaskHandle = NULL;
 
 	printf("Activate the responder \r\n");
-	time_active = INPUT_GetUINT32("Enter period in minutes to activate the responder");
+	time_active = INPUT_GetUINT32("Enter period in minutes to activate the responder: ");
 	time_active *= 60 * 1000;
-	printf("Activating the responder for %d minutes.\r\n", time_active);
-	// TDODO: activate responder
+	printf("Activating the responder for %d milliseconds.\r\n", time_active);
+	// activate responder
 	if (trxvu_activate_responder()){
 		printf("Responder is ON.\r\n");
-		printf("Deactivating in %u milliseconds.\r\n", time_active);
 		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 512, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
 	} else {
 		printf("Could not turn responder ON.\r\n");
 	}
-
 
 	return TRUE;
 }
@@ -560,6 +581,8 @@ static MenuAction trxvu_menu[] = {
 			{ vutc_sendInputTest, "Transmit Hex message written by user"},
 			{ SendTextMessage, "Transmit text message written by user" },
 			{ activateResponderTest, "Activate responder" },
+			{ deActivateResponderTest, "Deactivate responder" },
+			{ activateResponderAutoTest, "Activate responder for time interval" },
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
