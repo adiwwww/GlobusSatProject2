@@ -6,6 +6,7 @@
  */
 
 #include "common.h"
+#include "utils/responder.h"
 #include "input.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
@@ -509,6 +510,40 @@ static Boolean demo_test(void)
 	return TRUE;
 }
 
+static void ShutdownResponderTask(void *parameters)
+{
+	int milli_seconds = *(unsigned int*) parameters;
+	vTaskDelay(milli_seconds / portTICK_RATE_MS);
+	//TODO: now deactivate responder
+	trxvu_deactivate_responder();
+	vTaskDelete(NULL);
+}
+
+static Boolean activateResponderTest(void)
+{
+	// DOC: ISIS.TrxVU.ICD.001_v1.6 - TRXVU Interface Control Document_revD
+	// DOC: ISIS-TRXVU-ICD-00001A-ANNEX_A_TRXVU_transponder_mode-1_0
+
+	static unsigned int time_active;
+	static xTaskHandle deactivateResponderTaskHandle = NULL;
+
+	printf("Activate the responder \r\n");
+	time_active = INPUT_GetUINT32("Enter period in minutes to activate the responder");
+	time_active *= 60 * 1000;
+	printf("Activating the responder for %d minutes.\r\n", time_active);
+	// TDODO: activate responder
+	if (trxvu_activate_responder()){
+		printf("Responder is ON.\r\n");
+		printf("Deactivating in %u milliseconds.\r\n", time_active);
+		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 512, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
+	} else {
+		printf("Could not turn responder ON.\r\n");
+	}
+
+
+	return TRUE;
+}
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -524,6 +559,7 @@ static MenuAction trxvu_menu[] = {
 			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
 			{ vutc_sendInputTest, "Transmit Hex message written by user"},
 			{ SendTextMessage, "Transmit text message written by user" },
+			{ activateResponderTest, "Activate responder" },
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
