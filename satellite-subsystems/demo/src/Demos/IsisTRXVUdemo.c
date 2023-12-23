@@ -11,6 +11,7 @@
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
 #include "config/i2c_address.h"
+#include "modules/GOM_EPS.h"
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
@@ -600,6 +601,19 @@ static Boolean clear_beacon_test(void)
 	return TRUE;
 }
 
+static Boolean eps_hk_tests()
+{
+	print_error(gom_eps_init());
+	gom_eps_hk_basic_t telemetry;
+	eps_get_basic_HK_data(telemetry);
+
+	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[4]);
+	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[5]);
+	printf("Battery Mode = %d\r\n", telemetry.fields.battmode);
+
+	return TRUE;
+}
+
 static MenuAction trxvu_menu[] = {
 			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
 			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
@@ -621,6 +635,7 @@ static MenuAction trxvu_menu[] = {
 			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
 			{ beacon_test, "Beacon Test"},
 			{ clear_beacon_test, "Clear the beacon"},
+			{ eps_hk_tests, "Get EPS HK Data - GOMSpace"},
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
