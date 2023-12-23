@@ -605,7 +605,7 @@ static Boolean eps_hk_tests()
 {
 	print_error(gom_eps_init());
 	gom_eps_hk_basic_t telemetry;
-	eps_get_basic_HK_data(telemetry);
+	gom_eps_get_basic_HK_data(&telemetry);
 
 	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[4]);
 	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[5]);
