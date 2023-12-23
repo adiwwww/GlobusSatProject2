@@ -68,6 +68,7 @@ static MenuAction main_menu[] = {
 			{ SolarPanelv2test, "Solar Panels Tests"},
 			{ IsisMTQv2test, "MTQ V2 Tests"},
 			{ isis_eps__test, "ISIS EPS Tests"},
+			{ GomEPStest, "GOM EPS Tests"},
 			{ SystemCTest, "System C Tests"},
 			END_OF_MENU
 };
