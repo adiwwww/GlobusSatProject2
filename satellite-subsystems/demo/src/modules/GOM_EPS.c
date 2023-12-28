@@ -6,8 +6,9 @@
  */
 
 #include "GOM_EPS.h"
-#include "config/i2c_address.h"
+#include "Demos/common.h"
 
+#include "config/i2c_address.h"
 #include <at91/utility/trace.h>
 
 #include <hal/errors.h>
@@ -33,3 +34,23 @@ Boolean gom_eps_get_basic_HK_data(gom_eps_hk_basic_t* telemetry)
 	return rv == E_NO_SS_ERR;
 }
 
+Boolean gom_eps_get_HK(EPS_HK_Data* eps_hk)
+{
+	if (!eps_hk){
+		return FALSE;
+	}
+
+	gom_eps_hkparam_t hk_params;
+	print_error(GomEpsGetHkData_param(0, &hk_params));
+	eps_hk->photoVoltaic1 = hk_params.fields.photoVoltaic1;
+	eps_hk->photoVoltaic2 = hk_params.fields.photoVoltaic2;
+	eps_hk->photoVoltaic3 = hk_params.fields.photoVoltaic3;
+	eps_hk->pc = hk_params.fields.pc;
+	eps_hk->sc = hk_params.fields.sc;
+	eps_hk->bv = hk_params.fields.pc;
+	eps_hk->tempBattery = hk_params.fields.tempBattery;
+	eps_hk->bootCount = hk_params.fields.bootCount;
+	eps_hk->swErrors = hk_params.fields.swErrors;
+
+	return TRUE;
+}
