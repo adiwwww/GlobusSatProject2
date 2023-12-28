@@ -47,7 +47,6 @@
 #define SIZE_RXFRAME	30
 #define SIZE_TXFRAME	235
 
-static xTaskHandle watchdogKickTaskHandle = NULL;
 static xSemaphoreHandle trxvuInterruptTrigger = NULL;
 
 // Test Function
@@ -658,60 +657,9 @@ static MenuAction trxvu_menu[] = {
 			MENU_ITEM_END
 };
 
-static void _WatchDogKickTask(void *parameters)
-{
-	(void)parameters;
-	// Kick radio I2C watchdog by requesting uptime every 10 seconds
-	portTickType xLastWakeTime = xTaskGetTickCount ();
-	for(;;)
-	{
-		unsigned int uptime;
-		(void)IsisTrxvu_tcGetUptime(0, &uptime);
-		vTaskDelayUntil(&xLastWakeTime,10000);
-	}
-}
-
-Boolean IsisTRXVUdemoInit(void)
-{
-    // Definition of I2C and TRXUV
-	ISIStrxvuI2CAddress myTRXVUAddress[1];
-	ISIStrxvuFrameLengths myTRXVUBuffers[1];
-	ISIStrxvuBitrate myTRXVUBitrates[1];
-    int rv;
-
-	//I2C addresses defined
-	myTRXVUAddress[0].addressVu_rc = TRXVU_RC_ADDRESS;
-	myTRXVUAddress[0].addressVu_tc = TRXVU_TC_ADDRESS;
-
-	//Buffer definition
-	myTRXVUBuffers[0].maxAX25frameLengthTX = SIZE_TXFRAME;
-	myTRXVUBuffers[0].maxAX25frameLengthRX = SIZE_RXFRAME;
-
-	//Bitrate definition
-	myTRXVUBitrates[0] = trxvu_bitrate_1200;
-
-	//Initialize the trxvu subsystem
-	rv = IsisTrxvu_initialize(myTRXVUAddress, myTRXVUBuffers, myTRXVUBitrates, 1);
-	if(rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
-	{
-		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
-		// hanging the code
-		TRACE_ERROR("\n\r IsisTrxvu_initialize() failed; err=%d! Exiting ... \n\r", rv);
-		return FALSE;
-	}
-
-	// Start watchdog kick task
-	xTaskCreate( _WatchDogKickTask,(signed char*)"WDT", 2048, NULL, tskIDLE_PRIORITY, &watchdogKickTaskHandle );
-
-	return TRUE;
-}
-
 Boolean TRXVUtest(void)
 {
-	// initialize of I2C and IsisTRXVU subsystem drivers succeeded?
-	if (IsisTRXVUdemoInit())
-	{
-		MenuDisplay(trxvu_menu);
-	}
+	// Assume I2C and IsisTRXVU subsystem drivers already initialized
+	MenuDisplay(trxvu_menu);
 	return TRUE;
 }
