@@ -47,7 +47,7 @@ Boolean gom_eps_get_HK(EPS_HK_Data* eps_hk)
 	eps_hk->photoVoltaic3 = hk_params.fields.photoVoltaic3;
 	eps_hk->pc = hk_params.fields.pc;
 	eps_hk->sc = hk_params.fields.sc;
-	eps_hk->bv = hk_params.fields.pc;
+	eps_hk->bv = hk_params.fields.bv;
 	eps_hk->tempBattery = hk_params.fields.tempBattery;
 	eps_hk->bootCount = hk_params.fields.bootCount;
 	eps_hk->swErrors = hk_params.fields.swErrors;

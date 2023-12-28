@@ -26,7 +26,7 @@ static Boolean basic_eps_telemetry(void)
 	return TRUE;
 }
 
-Boolean extended_eps_telemetry(void)
+static Boolean extended_eps_telemetry(void)
 {
 	EPS_HK_Data data;
 	if (gom_eps_get_HK(&data)) {
