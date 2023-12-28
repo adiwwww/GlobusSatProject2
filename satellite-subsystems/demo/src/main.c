@@ -3,6 +3,8 @@
  *      Author: Akhil
  */
 
+#include "tests/gom_eps_tests.h"
+
 #include "Demos/IsisAntSdemo.h"
 #include "Demos/isis_ants2_demo.h"
 #include "Demos/GomEPSdemo.h"
@@ -69,6 +71,7 @@ static MenuAction main_menu[] = {
 			{ isis_eps__test, "ISIS EPS Tests"},
 			{ GomEPStest, "GOM EPS Tests"},
 			{ BeaconTests, "Beacon Tests"},
+			{ gom_eps_test, "New GOMSpace Tests"},
 			{ SystemCTest, "System C Tests"},
 			END_OF_MENU
 };
