@@ -7,8 +7,9 @@
 
 #include "modules_manager.h"
 
-#include <hal/Drivers/I2C.h>
+#include "m_trxvu.h"
 
+#include <hal/Drivers/I2C.h>
 #include <at91/utility/trace.h>
 
 
@@ -31,6 +32,7 @@ Boolean mm_init()
 	Boolean result = TRUE;
 
 	result &= init_i2c();
+	result &= m_trxvu_init();
 
 	return result;
 }
