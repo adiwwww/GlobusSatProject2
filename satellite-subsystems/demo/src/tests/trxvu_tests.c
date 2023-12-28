@@ -5,37 +5,23 @@
  *      Author: Muhammad Zahalqa
  */
 
+#include "trxvu_tests.h"
 #include "modules/m_gomeps.h"
 
 #include "utils/error_report.h"
-#include "utils/responder.h"
 #include "utils/input.h"
 #include "utils/menu_selection.h"
 
-#include "config/i2c_address.h"
+#include <satellite-subsystems/IsisTRXVU.h>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>
 
-#include <at91/utility/exithandler.h>
-#include <at91/commons.h>
-#include <at91/utility/trace.h>
-#include <at91/peripherals/cp15/cp15.h>
-
-#include <hal/Utility/util.h>
-#include <hal/Timing/WatchDogTimer.h>
-#include <hal/Drivers/I2C.h>
-#include <hal/Drivers/LED.h>
-#include <hal/boolean.h>
 #include <hal/errors.h>
 
-#include <satellite-subsystems/IsisTRXVU.h>
-
-#include <stddef.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+
 
 static Boolean transmit_fixed_message_test(void)
 {

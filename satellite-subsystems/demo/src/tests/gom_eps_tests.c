@@ -8,7 +8,7 @@
 #include "gom_eps_tests.h"
 #include "modules/m_gomeps.h"
 #include "utils/menu_selection.h"
-#include "Demos/common.h"
+#include "utils/error_report.h"
 
 #include <satellite-subsystems/IsisTRXVU.h>
 
