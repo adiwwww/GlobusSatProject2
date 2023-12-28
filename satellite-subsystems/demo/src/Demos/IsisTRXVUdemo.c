@@ -566,7 +566,7 @@ static Boolean activateResponderAutoTest(void)
 	// activate responder
 	if (trxvu_activate_responder()){
 		printf("Responder is ON.\r\n");
-		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 512, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
+		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 64, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
 	} else {
 		printf("Could not turn responder ON.\r\n");
 	}
@@ -587,7 +587,7 @@ static Boolean beacon_test(void)
 	static unsigned char toCallSign[7] = {'I', 'K', 'Q', 'G', 'S', '2', 0};
 	static unsigned char data[82] = "KQ Cube Sat Lost in Space, abducted by grumpy old green aliens!";
 	printf("TRXVU Beacon test.\r\n");
-	INPUT_GetSTRING("Beacon Message (max 80 chars): ", data, sizeof(data));
+	INPUT_GetSTRING("Beacon Message (max 80 chars): ", (char*)data, sizeof(data));
 	unsigned short interval = INPUT_GetUINT16("Becon interval in seconds: ");
 	int r = IsisTrxvu_tcSetAx25BeaconOvrClSign(0, fromCallSign, toCallSign, data, sizeof(data), interval);
 	print_error(r);
@@ -596,12 +596,12 @@ static Boolean beacon_test(void)
 
 static Boolean clear_beacon_test(void)
 {
-	int r = IsisTrxuv_itcClearBeacon(0);
+	int r = IsisTrxvu_tcClearBeacon(0);
 	print_error(r);
 	return TRUE;
 }
 
-static Boolean eps_hk_tests()
+static Boolean eps_basic_hk_tests(void)
 {
 	print_error(gom_eps_init());
 	gom_eps_hk_basic_t telemetry;
@@ -610,6 +610,23 @@ static Boolean eps_hk_tests()
 	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[4]);
 	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[5]);
 	printf("Battery Mode = %d\r\n", telemetry.fields.battmode);
+
+	return TRUE;
+}
+
+Boolean eps_beacon_hk_tests(void)
+{
+	EPS_HK_Data data;
+	print_error(gom_eps_init());
+	if (gom_eps_get_HK(&data)) {
+		printf("vBat: %d\r\n", data.bv);
+		int r = IsisTrxvu_tcSetAx25BeaconDefClSign(0, (unsigned char*)&data, sizeof(data), 30);
+		if (r) {
+			printf("Beacon was started");
+		} else {
+			print_error(r);
+		}
+	}
 
 	return TRUE;
 }
@@ -635,7 +652,8 @@ static MenuAction trxvu_menu[] = {
 			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
 			{ beacon_test, "Beacon Test"},
 			{ clear_beacon_test, "Clear the beacon"},
-			{ eps_hk_tests, "Get EPS HK Data - GOMSpace"},
+			{ eps_basic_hk_tests, "Get EPS Basic HK Data - GOMSpace"},
+			{ eps_beacon_hk_tests, "Send Beacon with HK Data - GOMSpace"},
 			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
