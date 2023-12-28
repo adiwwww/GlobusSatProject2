@@ -27,12 +27,12 @@ static Boolean endian_test(void)
 
 static Boolean data_types_sizes_test(void)
 {
-	print("size of   short: %d\r\n", sizeof(short));
-	print("size of     int: %d\r\n", sizeof(int));
-	print("size of    long: %d\r\n", sizeof(long));
-	print("size of   float: %d\r\n", sizeof(float));
-	print("size of  double: %d\r\n", sizeof(double));
-	print("size of int32_t: %d\r\n", sizeof(int32_t));
+	printf("size of   short: %d\r\n", sizeof(short));
+	printf("size of     int: %d\r\n", sizeof(int));
+	printf("size of    long: %d\r\n", sizeof(long));
+	printf("size of   float: %d\r\n", sizeof(float));
+	printf("size of  double: %d\r\n", sizeof(double));
+	printf("size of int32_t: %d\r\n", sizeof(int32_t));
 
 	return TRUE;
 }
