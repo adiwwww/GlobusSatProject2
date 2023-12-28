@@ -5,8 +5,6 @@
  *      Author: Muhammad Zahlqa
  */
 
-#include "SystemC.h"
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,6 +12,7 @@
 #include <inttypes.h>		// printf format codes
 
 #include <hal/Utility/util.h>
+#include <tests/system_c_tests.h>
 #include "utils/menu_selection.h"
 
 static Boolean endian_test(void)

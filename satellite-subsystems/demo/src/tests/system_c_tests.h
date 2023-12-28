@@ -5,11 +5,11 @@
  *      Author: Muhammad Zahalqa
  */
 
-#ifndef DEMOS_SYSTEMC_H_
-#define DEMOS_SYSTEMC_H_
+#ifndef SYSTEMC_TESTS_H_
+#define SYSTEMC_TESTS_H_
 
 #include <hal/boolean.h>
 
 Boolean SystemCTest(void);
 
-#endif /* DEMOS_SYSTEMC_H_ */
+#endif /* SYSTEMC_TESTS_H_ */

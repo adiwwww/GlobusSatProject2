@@ -5,6 +5,7 @@
 
 #include "tests/gom_eps_tests.h"
 #include "tests/trxvu_tests.h"
+#include "tests/system_c_tests.h"
 
 #include "Demos/IsisAntSdemo.h"
 #include "Demos/isis_ants2_demo.h"
@@ -20,7 +21,6 @@
 #include "Demos/IsisHSTxSdemo.h"
 #include "Demos/isis_eps_demo.h"
 #include "Demos/tausat2_pdhudemo.h"
-#include "Demos/SystemC.h"
 #include "Demos/beacon_tests.h"
 
 #include "modules/modules_manager.h"
