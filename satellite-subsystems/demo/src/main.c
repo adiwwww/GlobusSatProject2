@@ -38,15 +38,12 @@
 #include <hal/Utility/util.h>
 #include <hal/Timing/WatchDogTimer.h>
 #include <hal/Drivers/LED.h>
-//#include <hal/Drivers/I2C.h>
 #include <hal/Drivers/SPI.h>
 #include <hal/boolean.h>
 #include <hal/version/version.h>
 
-#include <stddef.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+
 
 #define ENABLE_MAIN_TRACES 1
 #if ENABLE_MAIN_TRACES
