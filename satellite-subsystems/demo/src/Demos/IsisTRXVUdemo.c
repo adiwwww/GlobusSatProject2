@@ -589,7 +589,6 @@ static Boolean clear_beacon_test(void)
 
 static Boolean eps_basic_hk_tests(void)
 {
-	print_error(gom_eps_init());
 	gom_eps_hk_basic_t telemetry;
 	gom_eps_get_basic_HK_data(&telemetry);
 
@@ -603,7 +602,6 @@ static Boolean eps_basic_hk_tests(void)
 Boolean eps_beacon_hk_tests(void)
 {
 	EPS_HK_Data data;
-	print_error(gom_eps_init());
 	if (gom_eps_get_HK(&data)) {
 		printf("vBat: %d\r\n", data.bv);
 		int r = IsisTrxvu_tcSetAx25BeaconDefClSign(0, (unsigned char*)&data, sizeof(data), 30);
