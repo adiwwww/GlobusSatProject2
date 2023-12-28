@@ -5,11 +5,11 @@
  *      Author: Muhammad Zahalqa
  */
 
-#include "Demos/common.h"
 #include "modules/m_gomeps.h"
 
+#include "utils/error_report.h"
 #include "utils/responder.h"
-#include "Demos/input.h"
+#include "utils/input.h"
 #include "utils/menu_selection.h"
 
 #include "config/i2c_address.h"
