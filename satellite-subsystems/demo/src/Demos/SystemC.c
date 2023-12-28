@@ -37,9 +37,22 @@ static Boolean data_types_sizes_test(void)
 	return TRUE;
 }
 
+static Boolean square_a_number_test(void)
+{
+	printf("Demo test \r\n");
+	printf("Enter a number:\r\n");
+	int number = 0;
+
+	while (UTIL_DbguGetInteger(&number) == 0);
+	int square = number * number;
+	printf("the square of %d is %d\r\n", number, square);
+
+	return TRUE;
+}
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
+			{ square_a_number_test, "Test square a number"},
 			MENU_ITEM_END
 };
 

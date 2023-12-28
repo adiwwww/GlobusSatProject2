@@ -502,19 +502,6 @@ static Boolean SendTextMessage(void)
 	return TRUE;
 }
 
-static Boolean demo_test(void)
-{
-	printf("Demo test \r\n");
-	printf("Enter a number:\r\n");
-	int number = 0;
-
-	while (UTIL_DbguGetInteger(&number) == 0);
-	int square = number * number;
-	printf("the square of %d is %d\r\n", number, square);
-
-	return TRUE;
-}
-
 static Boolean activateResponderTest(void)
 {
 	printf("Activate the responder \r\n");
@@ -653,7 +640,6 @@ static MenuAction trxvu_menu[] = {
 			{ clear_beacon_test, "Clear the beacon"},
 			{ eps_basic_hk_tests, "Get EPS Basic HK Data - GOMSpace"},
 			{ eps_beacon_hk_tests, "Send Beacon with HK Data - GOMSpace"},
-			{ demo_test, "Test square a number"},
 			MENU_ITEM_END
 };
 
