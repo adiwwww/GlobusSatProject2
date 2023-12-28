@@ -20,6 +20,7 @@
 #include "Demos/SystemC.h"
 #include "Demos/beacon_tests.h"
 
+#include "modules/modules_manager.h"
 #include "utils/menu_selection.h"
 
 #include <satellite-subsystems/version/version.h>
@@ -37,7 +38,7 @@
 #include <hal/Utility/util.h>
 #include <hal/Timing/WatchDogTimer.h>
 #include <hal/Drivers/LED.h>
-#include <hal/Drivers/I2C.h>
+//#include <hal/Drivers/I2C.h>
 #include <hal/Drivers/SPI.h>
 #include <hal/boolean.h>
 #include <hal/version/version.h>
@@ -77,32 +78,16 @@ static MenuAction main_menu[] = {
 
 Boolean selectAndExecuteTest()
 {
-	//Initialize the I2C
-	int retValInt = I2C_start(100000, 10);
-	if(retValInt != 0)
-	{
-		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
-	}
-
-	printf("\tKafr Qara QubeSat2 Flight Software Test Bed\n\n");
+	printf("\tKafr Qar3 QubeSat Flight Software Testing Software\n\n");
 	MenuDisplay(main_menu);
-
 	return TRUE;
-}
-
-static void init_i2c(void)
-{
-	int retValInt = I2C_start(100000, 10);
-	if(retValInt != 0)
-	{
-		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
-	}
 }
 
 void taskMain()
 {
 	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
-	init_i2c();
+
+	mm_init();
 
 	do {
 		LED_toggle(led_1);
