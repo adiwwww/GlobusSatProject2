@@ -16,7 +16,7 @@
 #include <hal/boolean.h>
 #include <satellite-subsystems/GomEPS.h>
 
-Boolean gom_eps_init(void)
+Boolean m_gom_eps_init(void)
 {
 	unsigned char i2c_address = GOM_EPS_ADDRESS;
 	int rv = GomEpsInitialize(&i2c_address, 1);

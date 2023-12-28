@@ -8,6 +8,7 @@
 #include "modules_manager.h"
 
 #include "m_trxvu.h"
+#include "m_gomeps.h"
 
 #include <hal/Drivers/I2C.h>
 #include <at91/utility/trace.h>
@@ -33,6 +34,7 @@ Boolean mm_init()
 
 	result &= init_i2c();
 	result &= m_trxvu_init();
+	result &= m_gom_eps_init();
 
 	return result;
 }

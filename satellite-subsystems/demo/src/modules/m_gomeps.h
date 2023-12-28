@@ -24,7 +24,7 @@ typedef struct __attribute__ ((__packed__)) EPS_HK_Data {
 	unsigned short swErrors; //!< Number of errors in the eps software
 } EPS_HK_Data;
 
-Boolean gom_eps_init(void);
+Boolean m_gom_eps_init(void);
 
 Boolean gom_eps_get_basic_HK_data(gom_eps_hk_basic_t* telemetry);
 
