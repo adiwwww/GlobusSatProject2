@@ -5,15 +5,15 @@
  *      Author: Muhammad Zahlqa
  */
 
-#include <stddef.h>
-#include <stdlib.h>
+#include "system_c_tests.h"
+
+#include "utils/menu_selection.h"
+#include "utils/input.h"
+
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>		// printf format codes
 
-#include <hal/Utility/util.h>
-#include <tests/system_c_tests.h>
-#include "utils/menu_selection.h"
 
 static Boolean endian_test(void)
 {
@@ -40,16 +40,15 @@ static Boolean data_types_sizes_test(void)
 
 static Boolean square_a_number_test(void)
 {
-	printf("Demo test \r\n");
-	printf("Enter a number:\r\n");
-	int number = 0;
+	printf("Square a number test \r\n");
+	int number = INPUT_GetINT32("Enter a number: ");
 
-	while (UTIL_DbguGetInteger(&number) == 0);
 	int square = number * number;
 	printf("the square of %d is %d\r\n", number, square);
 
 	return TRUE;
 }
+
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
