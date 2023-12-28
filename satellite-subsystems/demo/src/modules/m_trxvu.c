@@ -9,25 +9,49 @@
 
 #include "config/i2c_address.h"
 
+#include <satellite-subsystems/IsisTRXVU.h>
+
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-//#include <at91/utility/exithandler.h>
-//#include <at91/commons.h>
 #include <at91/utility/trace.h>
-//#include <at91/peripherals/cp15/cp15.h>
 
 #include <hal/Timing/WatchDogTimer.h>
 #include <hal/Drivers/I2C.h>
 #include <hal/boolean.h>
 #include <hal/errors.h>
 
-#include <satellite-subsystems/IsisTRXVU.h>
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#define SET_TRANSMITTER_MODE			0x38	///> Sets the transmitter current running mode
+#define NOMINAL_MODE		0x1
+#define RESPONDER_MODE	0x2
+
+#define SET_RSSI_THRESHOLD			0x52	///> Set RSSI Transponder Threshold
+
+Boolean trxvu_activate_responder(void)
+{
+	unsigned char cmd[] = {SET_TRANSMITTER_MODE, NOMINAL_MODE | RESPONDER_MODE};
+	return 0 == I2C_write(TRXVU_TC_ADDRESS, cmd, sizeof(cmd));
+}
+
+
+Boolean trxvu_deactivate_responder(void)
+{
+	unsigned char cmd[] = {SET_TRANSMITTER_MODE, NOMINAL_MODE};
+	return 0 == I2C_write(TRXVU_TC_ADDRESS, cmd, sizeof(cmd));
+}
+
+Boolean trxvu_set_responder_rssi_threshold(uint16_t rssi)
+{
+	unsigned char cmd[] = {SET_RSSI_THRESHOLD, rssi>>8, 0, 0};
+	cmd[1] = rssi >> 8;
+	cmd[2] = rssi & 0xFF;
+	return 0 == I2C_write(TRXVU_TC_ADDRESS, cmd, sizeof(cmd));
+}
 
 
 static xTaskHandle watchdogKickTaskHandle = NULL;
