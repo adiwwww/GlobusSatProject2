@@ -18,6 +18,7 @@
 #include "Demos/isis_eps_demo.h"
 #include "Demos/tausat2_pdhudemo.h"
 #include "Demos/SystemC.h"
+#include "Demos/beacon_tests.h"
 
 #include "utils/menu_selection.h"
 
@@ -69,6 +70,7 @@ static MenuAction main_menu[] = {
 			{ IsisMTQv2test, "MTQ V2 Tests"},
 			{ isis_eps__test, "ISIS EPS Tests"},
 			{ GomEPStest, "GOM EPS Tests"},
+			{ BeaconTests, "Beacon Tests"},
 			{ SystemCTest, "System C Tests"},
 			END_OF_MENU
 };
