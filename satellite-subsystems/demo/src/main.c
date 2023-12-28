@@ -4,6 +4,7 @@
  */
 
 #include "tests/gom_eps_tests.h"
+#include "tests/trxvu_tests.h"
 
 #include "Demos/IsisAntSdemo.h"
 #include "Demos/isis_ants2_demo.h"
@@ -72,6 +73,7 @@ static MenuAction main_menu[] = {
 			{ GomEPStest, "GOM EPS Tests"},
 			{ BeaconTests, "Beacon Tests"},
 			{ gom_eps_test, "New GOMSpace Tests"},
+			{ trxvu_tests, "New TRXVU Tests"},
 			{ SystemCTest, "System C Tests"},
 			END_OF_MENU
 };
