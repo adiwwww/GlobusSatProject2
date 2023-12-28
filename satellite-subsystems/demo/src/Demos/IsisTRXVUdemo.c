@@ -565,7 +565,7 @@ static Boolean activateResponderAutoTest(void)
 	// activate responder
 	if (trxvu_activate_responder()){
 		printf("Responder is ON.\r\n");
-		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 64, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
+		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 512, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
 	} else {
 		printf("Could not turn responder ON.\r\n");
 	}
