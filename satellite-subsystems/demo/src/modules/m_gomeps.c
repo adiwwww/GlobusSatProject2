@@ -2,10 +2,11 @@
  * GOM_EPS.c
  *
  *  Created on: Dec 23, 2023
- *      Author: tryfinally
+ *      Author: Muhammad Zahalqa
  */
 
-#include "GOM_EPS.h"
+#include "m_gomeps.h"
+
 #include "Demos/common.h"
 
 #include "config/i2c_address.h"
@@ -19,8 +20,7 @@ Boolean gom_eps_init(void)
 {
 	unsigned char i2c_address = GOM_EPS_ADDRESS;
 	int rv = GomEpsInitialize(&i2c_address, 1);
-	if (rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
-	{
+	if (rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED) {
 		TRACE_ERROR("\n\r GomEpsInitialize() failed; err=%d! Exiting ... \n\r", rv);
 		return FALSE;
 	}

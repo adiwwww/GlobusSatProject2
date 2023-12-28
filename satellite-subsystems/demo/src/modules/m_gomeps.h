@@ -5,8 +5,8 @@
  *      Author: tryfinally
  */
 
-#ifndef MODULES_GOM_EPS_H_
-#define MODULES_GOM_EPS_H_
+#ifndef MODULES_M_GOMEPS_H_
+#define MODULES_M_GOMEPS_H_
 
 #include <hal/boolean.h>
 #include <satellite-subsystems/GomEPS.h>
@@ -30,4 +30,4 @@ Boolean gom_eps_get_basic_HK_data(gom_eps_hk_basic_t* telemetry);
 
 Boolean gom_eps_get_HK(EPS_HK_Data* eps_hk);
 
-#endif /* MODULES_GOM_EPS_H_ */
+#endif /* MODULES_M_GOMEPS_H_ */

@@ -6,13 +6,13 @@
  */
 
 #include "common.h"
+#include "modules/m_gomeps.h"
+
 #include "utils/responder.h"
 #include "input.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
 #include "config/i2c_address.h"
-#include "modules/GOM_EPS.h"
-
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>

@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>		// printf format codes
+
+#include <hal/Utility/util.h>
 #include "utils/menu_selection.h"
 
 static Boolean endian_test(void)
