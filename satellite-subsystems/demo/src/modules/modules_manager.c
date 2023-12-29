@@ -24,7 +24,7 @@ static Boolean init_i2c(void)
 		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
 		return FALSE;
 	}
-	TRACE_INFO("I2C:     Started\n\r");
+	TRACE_INFO("\t\tI2C:     Started.");
 	return TRUE;
 }
 

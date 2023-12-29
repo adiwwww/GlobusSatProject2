@@ -25,7 +25,7 @@ Boolean m_gom_eps_init(void)
 		return FALSE;
 	}
 
-	TRACE_INFO("GOMEPS:  Started\n\r");
+	TRACE_INFO("\t\tGOMEPS:  Started.");
 	return TRUE;
 }
 
