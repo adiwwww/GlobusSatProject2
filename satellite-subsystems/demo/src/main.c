@@ -6,9 +6,9 @@
 #include "tests/gom_eps_tests.h"
 #include "tests/trxvu_tests.h"
 #include "tests/system_c_tests.h"
+#include "tests/beacon_tests.h"
 
 #include "Demos/demos.h"
-#include "Demos/beacon_tests.h"
 
 #include "modules/modules_manager.h"
 #include "utils/menu_selection.h"
