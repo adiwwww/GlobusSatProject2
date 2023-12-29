@@ -20,302 +20,121 @@ static char _input[_MAX_INPUT_BUFFER_LENGTH];
 
 static int _GetInput( char* input, int len );
 
-int8_t INPUT_GetINT8( char const* printStr )
+static char* get_input(char const* message)
+{
+	puts(message);
+	fflush(stdout);
+
+	for (;;) {
+		if (_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH) ) {
+			break;
+		}
+		printf("Buffer overrun!\n\r");
+	}
+	return _input;
+}
+
+long INPUT_GetLong_Range(char const* printStr, long min, long max)
 {
 	long value = 0;
 	char *pEnd = NULL;
-	int done = 0;
 
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtol((char*)_input, &pEnd, 0 );
-
-		if( value > INT8_MAX )
-		{
+	for (;;) {
+		char* buffer = get_input(printStr);
+		value = strtol(buffer, &pEnd, 0);
+		if( value > max ) {
 			printf("Value too large!\n\r");
-			continue;
-		}
-		else if(value < INT8_MIN)
-		{
+		} else if(value < min) {
 			printf("Value too small!\n\r");
-			continue;
+		} else if (buffer == pEnd) {
+			printf("Not a number!\n\r");
+		} else {
+			break;
 		}
-
-		done = 1;
 	}
-	while(!done);
 
-	return (int8_t)value;
+	return value;
+}
+
+unsigned long INPUT_GetULong_RangeWithBase(char const* printStr, unsigned long min, unsigned long max, int base)
+{
+	unsigned long value = 0;
+	char *pEnd = NULL;
+
+	for (;;) {
+		char* buffer = get_input(printStr);
+		value = strtoul(buffer, &pEnd, base);
+		if( value > max ) {
+			printf("Value too large!\n\r");
+		} else if(value < min) {
+			printf("Value too small!\n\r");
+		} else if (buffer == pEnd) {
+			printf("Not a number!\n\r");
+		} else {
+			break;
+		}
+	}
+
+	return value;
+}
+
+unsigned long INPUT_GetULong_Range(char const* printStr, unsigned long min, unsigned long max)
+{
+	return INPUT_GetULong_RangeWithBase(printStr, min, max, 0);
+}
+
+int8_t INPUT_GetINT8( char const* printStr )
+{
+	return (int8_t)INPUT_GetLong_Range(printStr, INT8_MIN, INT8_MAX);
 }
 
 int16_t INPUT_GetINT16( char const* printStr )
 {
-	long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtol((char*)_input, &pEnd, 0 );
-
-		if( value > INT16_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-		else if(value < INT16_MIN)
-		{
-			printf("Value too small!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done);
-
-	return (int16_t)value;
+	return (int16_t)INPUT_GetLong_Range(printStr, INT16_MIN, INT16_MAX);;
 }
 
 int32_t INPUT_GetINT32( char const* printStr )
 {
-	long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtol((char*)_input, &pEnd, 0 );
-
-		if( value > INT32_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-		else if(value < INT32_MIN)
-		{
-			printf("Value too small!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done);
-
-	return (uint32_t)value;
+	return (uint32_t)INPUT_GetLong_Range(printStr, INT32_MIN, INT32_MAX);
 }
 
 uint8_t INPUT_GetUINT8( char const* printStr )
 {
-	unsigned long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtoul((char*)_input, &pEnd, 0 );
-
-		if( value > UINT8_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done); /* TODO: timeout! */
-
-	return (uint8_t)value;
+	return (uint8_t)INPUT_GetULong_Range(printStr, 0, UINT8_MAX);
 }
 
 uint16_t INPUT_GetUINT16( char const* printStr )
 {
-	unsigned long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtoul((char*)_input, &pEnd, 0 );
-
-		if( value > UINT16_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done); /* TODO: timeout! */
-
-	return (uint16_t)value;
+	return (uint16_t)INPUT_GetULong_Range(printStr, 0, UINT16_MAX);
 }
 
 uint32_t INPUT_GetUINT32( char const* printStr )
 {
-	unsigned long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtoul((char*)_input, &pEnd, 0 );
-
-		if( value > UINT32_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done); /* TODO: timeout! */
-
-	return (uint32_t)value;
+	return (uint32_t)INPUT_GetULong_Range(printStr, 0, UINT32_MAX);
 }
 
 uint8_t INPUT_GetHEX8( char const* printStr )
 {
-	unsigned long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtoul((char*)_input, &pEnd, 16 );
-
-		if( value > UINT8_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done); /* TODO: timeout! */
-
-	return (uint8_t)value;
+	return (uint8_t)INPUT_GetULong_RangeWithBase(printStr, 0, UINT8_MAX, 16);
 }
 
 uint16_t INPUT_GetHEX16( char const* printStr )
 {
-	unsigned long value = 0;
-	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
-		}
-
-		value = strtoul((char*)_input, &pEnd, 16 );
-
-		if( value > UINT16_MAX )
-		{
-			printf("Value too large!\n\r");
-			continue;
-		}
-
-		done = 1;
-	}
-	while(!done); /* TODO: timeout! */
-
-	return (uint16_t)value;
+	return (uint16_t)INPUT_GetULong_RangeWithBase(printStr, 0, UINT16_MAX, 16);
 }
 
 float INPUT_GetFLOAT( char const* printStr )
 {
 	float value = 0;
 	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
+	for(;;){
+		char* buffer = get_input(printStr);
+		value = strtof(buffer, &pEnd);
+		if (buffer != pEnd) {
+			break;
 		}
-
-		value = strtof((char*)_input, &pEnd );
-
-		/* TODO: check limits? */
-
-		done = 1;
+		printf("Not a floating point number!\r\n");
 	}
-	while(!done); /* TODO: timeout! */
-
 	return value;
 }
 
@@ -323,36 +142,21 @@ double INPUT_GetDOUBLE( char const* printStr )
 {
 	double value = 0;
 	char *pEnd = NULL;
-	int done = 0;
-
-	do
-	{
-		printf("%s", printStr);
-		fflush(stdout);
-
-		if( !_GetInput( _input, _MAX_INPUT_BUFFER_LENGTH ) )
-		{
-			printf("Buffer overrun!\n\r");
-			continue;
+	for(;;){
+		char* buffer = get_input(printStr);
+		value = strtod(buffer, &pEnd);
+		if (buffer != pEnd) {
+			break;
 		}
-
-		value = strtod((char*)_input, &pEnd );
-
-		/* TODO: check limits? */
-
-		done = 1;
+		printf("Not a floating point number!\r\n");
 	}
-	while(!done); /* TODO: timeout! */
-
 	return value;
 }
 
 void INPUT_GetSTRING( char const* printStr, char * const str, int len )
 {
 	printf("%s", printStr);
-
 	fflush(stdout);
-
 	_GetInput( str, len );
 }
 

@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+long INPUT_GetLong_Range(char const* printStr, long min, long max);
+unsigned long INPUT_GetULong_Range(char const* printStr, unsigned long min, unsigned long max);
+
 int8_t 	INPUT_GetINT8( char const* printStr );
 int16_t INPUT_GetINT16( char const* printStr );
 int32_t INPUT_GetINT32( char const* printStr );
