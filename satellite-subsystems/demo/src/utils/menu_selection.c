@@ -31,7 +31,7 @@ Boolean MenuSelectAndExecute(MenuAction menu[])
 		return menu[selection-1].action();
 	}
 
-	return FALSE;
+	return TRUE;
 }
 
 Boolean MenuDisplay(MenuAction menu[])
