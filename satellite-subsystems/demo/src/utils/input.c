@@ -358,7 +358,7 @@ void INPUT_GetSTRING( char const* printStr, char * const str, int len )
 
 int INPUT_GetINT_MinMax(char const* printStr, int min, int max)
 {
-	for(int i = 0; i < 10; ++i) {
+	for(;;) {
 		int result = INPUT_GetINT32(printStr);
 		if ( min <= result && result <= max){
 			return result;
