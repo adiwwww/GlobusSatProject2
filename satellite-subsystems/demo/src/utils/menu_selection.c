@@ -15,20 +15,23 @@ Boolean quit_menu() { return FALSE; }
 
 Boolean MenuSelectAndExecute(MenuAction menu[])
 {
-	int selection = 0;
 	int index = 0;
-	printf( "\n\r Select a test to perform: \n\r");
 	MenuAction* pmenu = menu;
+
 	while (pmenu->action) {
 		printf("\t %-2d) %s\r\n", ++index, pmenu->menuSelection);
 		++pmenu;
 	}
+	printf( "\n\rSelect a test to perform: ");
+	fflush(stdout);
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, index) == 0){
-		;
+	int selection = INPUT_GetINT_MinMax(1, index);
+	if (0 <= selection && selection <= index) {
+		printf("Executing: %s\n", menu[index-1]);
+		return menu[selection-1].action();
 	}
 
-	return menu[selection-1].action();
+	return FALSE;
 }
 
 Boolean MenuDisplay(MenuAction menu[])
