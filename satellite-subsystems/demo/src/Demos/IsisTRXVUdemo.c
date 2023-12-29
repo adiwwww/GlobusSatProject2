@@ -7,8 +7,8 @@
 
 #include "common.h"
 #include "modules/m_gomeps.h"
+#include "modules/m_trxvu.h"
 
-#include "utils/responder.h"
 #include "input.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
