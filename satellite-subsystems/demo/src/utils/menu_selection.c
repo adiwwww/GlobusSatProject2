@@ -7,6 +7,8 @@
 
 #include "menu_selection.h"
 
+#include "utils/input.h"
+
 #include <stdio.h>
 
 #include <hal/Utility/util.h>
@@ -22,12 +24,10 @@ Boolean MenuSelectAndExecute(MenuAction menu[])
 		printf("\t %-2d) %s\r\n", ++index, pmenu->menuSelection);
 		++pmenu;
 	}
-	printf( "\n\rSelect a test to perform: ");
-	fflush(stdout);
 
-	int selection = INPUT_GetINT_MinMax(1, index);
+	int selection = INPUT_GetINT_MinMax("Select a test to perform: ", 1, index);
 	if (0 <= selection && selection <= index) {
-		printf("Executing: %s\n", menu[index-1]);
+		printf("Executing: %s\n", menu[selection-1].menuSelection);
 		return menu[selection-1].action();
 	}
 
