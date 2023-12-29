@@ -18,9 +18,9 @@
 
 static char _input[_MAX_INPUT_BUFFER_LENGTH];
 
-static int _GetInput( char *input, int len );
+static int _GetInput( char* input, int len );
 
-int8_t INPUT_GetINT8( char* printStr )
+int8_t INPUT_GetINT8( char const* printStr )
 {
 	long value = 0;
 	char *pEnd = NULL;
@@ -57,7 +57,7 @@ int8_t INPUT_GetINT8( char* printStr )
 	return (int8_t)value;
 }
 
-int16_t INPUT_GetINT16( char* printStr )
+int16_t INPUT_GetINT16( char const* printStr )
 {
 	long value = 0;
 	char *pEnd = NULL;
@@ -94,7 +94,7 @@ int16_t INPUT_GetINT16( char* printStr )
 	return (int16_t)value;
 }
 
-int32_t INPUT_GetINT32( char* printStr )
+int32_t INPUT_GetINT32( char const* printStr )
 {
 	long value = 0;
 	char *pEnd = NULL;
@@ -131,7 +131,7 @@ int32_t INPUT_GetINT32( char* printStr )
 	return (uint32_t)value;
 }
 
-uint8_t INPUT_GetUINT8( char* printStr )
+uint8_t INPUT_GetUINT8( char const* printStr )
 {
 	unsigned long value = 0;
 	char *pEnd = NULL;
@@ -163,7 +163,7 @@ uint8_t INPUT_GetUINT8( char* printStr )
 	return (uint8_t)value;
 }
 
-uint16_t INPUT_GetUINT16( char* printStr )
+uint16_t INPUT_GetUINT16( char const* printStr )
 {
 	unsigned long value = 0;
 	char *pEnd = NULL;
@@ -195,7 +195,7 @@ uint16_t INPUT_GetUINT16( char* printStr )
 	return (uint16_t)value;
 }
 
-uint32_t INPUT_GetUINT32( char* printStr )
+uint32_t INPUT_GetUINT32( char const* printStr )
 {
 	unsigned long value = 0;
 	char *pEnd = NULL;
@@ -227,7 +227,7 @@ uint32_t INPUT_GetUINT32( char* printStr )
 	return (uint32_t)value;
 }
 
-uint8_t INPUT_GetHEX8( char* printStr )
+uint8_t INPUT_GetHEX8( char const* printStr )
 {
 	unsigned long value = 0;
 	char *pEnd = NULL;
@@ -259,7 +259,7 @@ uint8_t INPUT_GetHEX8( char* printStr )
 	return (uint8_t)value;
 }
 
-uint16_t INPUT_GetHEX16( char* printStr )
+uint16_t INPUT_GetHEX16( char const* printStr )
 {
 	unsigned long value = 0;
 	char *pEnd = NULL;
@@ -291,7 +291,7 @@ uint16_t INPUT_GetHEX16( char* printStr )
 	return (uint16_t)value;
 }
 
-float INPUT_GetFLOAT( char* printStr )
+float INPUT_GetFLOAT( char const* printStr )
 {
 	float value = 0;
 	char *pEnd = NULL;
@@ -319,7 +319,7 @@ float INPUT_GetFLOAT( char* printStr )
 	return value;
 }
 
-double INPUT_GetDOUBLE( char* printStr )
+double INPUT_GetDOUBLE( char const* printStr )
 {
 	double value = 0;
 	char *pEnd = NULL;
@@ -347,7 +347,7 @@ double INPUT_GetDOUBLE( char* printStr )
 	return value;
 }
 
-void INPUT_GetSTRING( char* printStr, char * const str, int len )
+void INPUT_GetSTRING( char const* printStr, char * const str, int len )
 {
 	printf("%s", printStr);
 
@@ -356,7 +356,18 @@ void INPUT_GetSTRING( char* printStr, char * const str, int len )
 	_GetInput( str, len );
 }
 
-static int _GetInput( char *input, int len )
+int INPUT_GetINT_MinMax(char const* printStr, int min, int max)
+{
+	for(int i = 0; i < 10; ++i) {
+		int result = INPUT_GetINT32(printStr);
+		if ( min <= result && result <= max){
+			return result;
+		}
+	}
+	return 0;
+}
+
+static int _GetInput( char* input, int len )
 {
 	uint8_t key;
 	int index, inputOK;
