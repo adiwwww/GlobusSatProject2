@@ -61,7 +61,7 @@ static MenuAction main_menu[] = {
 
 Boolean selectAndExecuteTest()
 {
-	printf("\tKafr Qar3 QubeSat Flight Software Testing Software\n\n");
+	printf("\n\tKafr Qar3 QubeSat Flight Software Testing Software\n");
 	MenuDisplay(main_menu);
 	return TRUE;
 }

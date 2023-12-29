@@ -22,7 +22,7 @@ static int _GetInput( char* input, int len );
 
 static char* get_input(char const* message)
 {
-	puts(message);
+	printf("%s", message);
 	fflush(stdout);
 
 	for (;;) {
