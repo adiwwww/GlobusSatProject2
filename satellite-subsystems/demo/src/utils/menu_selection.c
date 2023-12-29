@@ -20,6 +20,7 @@ Boolean MenuSelectAndExecute(MenuAction menu[])
 	int index = 0;
 	MenuAction* pmenu = menu;
 
+	printf("\r\n");
 	while (pmenu->action) {
 		printf("\t %-2d) %s\r\n", ++index, pmenu->menuSelection);
 		++pmenu;
@@ -27,7 +28,6 @@ Boolean MenuSelectAndExecute(MenuAction menu[])
 
 	int selection = INPUT_GetINT_MinMax("Select a test to perform: ", 1, index);
 	if (0 <= selection && selection <= index) {
-		printf("Executing: %s\n", menu[selection-1].menuSelection);
 		return menu[selection-1].action();
 	}
 
