@@ -49,6 +49,15 @@ static Boolean square_a_number_test(void)
 	return TRUE;
 }
 
+static Boolean sum_a_number_test(void)
+{
+	printf("plus a number test \r\n");
+    int number = INPUT_GetINT("Enter a number: ");
+    int number1 = INPUT_GetINT("Enter a number: ") ;
+    int sum = number + number1;
+	printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
+}
+
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
