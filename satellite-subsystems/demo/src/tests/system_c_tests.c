@@ -52,18 +52,45 @@ static Boolean square_a_number_test(void)
 static Boolean sum_a_number_test(void)
 {
 	printf("sum a number test \r\n");
-    int number = INPUT_GetINT("Enter a number: ");
-    int number1 = INPUT_GetINT("Enter a number: ");
+  int number = INPUT_GetINT("Enter a number: ");
+  int number1 = INPUT_GetINT("Enter a number: ");
 
-    int sum = number + number1;
-	printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
+  int sum = number + number1;
+  printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
+  return TRUE;
+}
+
+static Boolean absolute_of_number_test(void)
+{
+	printf("absolute of a number test \r\n");
+	int num = INPUT_GetINT32("Enter a number: ");
+	int abs = num;
+
+	if (num < 0)
+	{
+		abs = -1*num;
+	}
+
+	printf("the absolute value of %d is %d", num, abs);
+  return TRUE;
+}
+
+static Boolean mul_test(void)
+{
+	int a = INPUT_GetINT32("Enter a number: ");
+	int b = INPUT_GetINT32("Enter a number: ");
+	int r=  a * b ;
+	printf("the mul of %d and %d is %d\r\n", a, b, r);
+	return TRUE;
 }
 
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
 			{ square_a_number_test, "Test square a number"},
-			{ Boolean sum_a_number_test, "Test sum a number"},
+			{ sum_a_number_test, "Test sum a number"},
+			{ absolute_of_number_test, "Test absolute value of a number"},
+			{ mul_test, "Test mul of two num"},
 			MENU_ITEM_END
 };
 
