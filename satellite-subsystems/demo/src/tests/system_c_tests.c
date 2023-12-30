@@ -61,7 +61,15 @@ static Boolean absolute_of_number_test(void)
 	}
 
 	printf("the absolute value of %d is %d", num, abs);
+  return TRUE;
+}
 
+static Boolean mul_test(void)
+{
+	int a = INPUT_GetINT32("Enter a number: ");
+	int b = INPUT_GetINT32("Enter a number: ");
+	int r=  a * b ;
+	printf("the mul of %d and %d is %d\r\n", a, b, r);
 	return TRUE;
 }
 
@@ -70,6 +78,7 @@ static MenuAction system_menu[] = {
 			{ data_types_sizes_test, "Data types size test"},
 			{ square_a_number_test, "Test square a number"},
 			{ absolute_of_number_test, "Test absolute value of a number"},
+			{ mul_test, "Test mul of two num"},
 			MENU_ITEM_END
 };
 
