@@ -49,10 +49,27 @@ static Boolean square_a_number_test(void)
 	return TRUE;
 }
 
+static Boolean absolute_of_number_test(void)
+{
+	printf("absolute of a number test \r\n");
+	int num = INPUT_GetINT32("Enter a number: ");
+	int abs = num;
+
+	if (num < 0)
+	{
+		abs = -1*num;
+	}
+
+	printf("the absolute value of %d is %d", num, abs);
+
+	return TRUE;
+}
+
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
 			{ square_a_number_test, "Test square a number"},
+			{ absolute_of_number_test, "Test absolute value of a number"},
 			MENU_ITEM_END
 };
 
