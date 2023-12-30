@@ -49,6 +49,17 @@ static Boolean square_a_number_test(void)
 	return TRUE;
 }
 
+static Boolean sum_a_number_test(void)
+{
+	printf("sum a number test \r\n");
+  int number = INPUT_GetINT("Enter a number: ");
+  int number1 = INPUT_GetINT("Enter a number: ");
+
+  int sum = number + number1;
+  printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
+  return TRUE;
+}
+
 static Boolean absolute_of_number_test(void)
 {
 	printf("absolute of a number test \r\n");
@@ -77,6 +88,7 @@ static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
 			{ square_a_number_test, "Test square a number"},
+			{ sum_a_number_test, "Test sum a number"},
 			{ absolute_of_number_test, "Test absolute value of a number"},
 			{ mul_test, "Test mul of two num"},
 			MENU_ITEM_END
