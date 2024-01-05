@@ -52,12 +52,12 @@ static Boolean square_a_number_test(void)
 static Boolean sum_a_number_test(void)
 {
 	printf("sum a number test \r\n");
-  int number = INPUT_GetINT32("Enter a number: ");
-  int number1 = INPUT_GetINT32("Enter a number: ");
+	int number = INPUT_GetINT32("Enter a number: ");
+	int number1 = INPUT_GetINT32("Enter a number: ");
 
-  int sum = number + number1;
-  printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
-  return TRUE;
+	int sum = number + number1;
+	printf("the sum of %d is %d is %d\r\n" , number, number1, sum);
+	return TRUE;
 }
 
 static Boolean absolute_of_number_test(void)
@@ -72,7 +72,7 @@ static Boolean absolute_of_number_test(void)
 	}
 
 	printf("the absolute value of %d is %d", num, abs);
-  return TRUE;
+	return TRUE;
 }
 
 static Boolean mul_test(void)
