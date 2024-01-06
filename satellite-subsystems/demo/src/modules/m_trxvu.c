@@ -62,7 +62,7 @@ Boolean trxvu_set_ax25_bitrate(ISIStrxvuBitrate bitrate)
 Boolean trxvu_send_message(unsigned char const* data, unsigned short length)
 {
 	unsigned char availableFrames;
-	int r = IsisTrxvu_tcSendAX25DefClSign(0, data, length, &availableFrames);
+	int r = IsisTrxvu_tcSendAX25DefClSign(0, (unsigned char*)data, length, &availableFrames);
 	return r == E_NO_SS_ERR;
 }
 
@@ -80,6 +80,8 @@ static void _WatchDogKickTask(void *parameters)
 	}
 }
 
+static unsigned char from_callsign[] = "TEVELKQ";
+static unsigned char to_callsign[] = "KQ-GNDS";
 Boolean m_trxvu_init(void)
 {
     // Definition of I2C and TRXUV
@@ -105,8 +107,8 @@ Boolean m_trxvu_init(void)
 		return FALSE;
 	}
 
-	IsisTrxvu_tcSetDefToClSign(0, "KQ-GNDS");
-	IsisTrxvu_tcSetDefFromClSign(0, "TEVELKQ");
+	IsisTrxvu_tcSetDefToClSign(0, to_callsign);
+	IsisTrxvu_tcSetDefFromClSign(0, from_callsign);
 
 	// Start watch dog kick task
 	xTaskCreate(_WatchDogKickTask,(signed char*)"TRXVU-WDT", 2048, NULL, tskIDLE_PRIORITY, &watchdogKickTaskHandle );

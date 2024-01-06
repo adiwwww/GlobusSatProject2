@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <hal/boolean.h>
+#include <satellite-subsystems/IsisTRXVU.h>
 
 #define M_TRXVU_RX_FRAME_SIZE		(30)
 #define M_TRXVU_TX_FRAME_SIZE		(235)
