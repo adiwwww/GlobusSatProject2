@@ -37,4 +37,13 @@ Boolean trxvu_deactivate_responder(void);
  */
 Boolean trxvu_set_responder_rssi_threshold(uint16_t rssi);
 
+/**
+ * Set bitrate for AX25
+ * @param bitrate
+ * @return success or failure
+ */
+Boolean trxvu_set_ax25_bitrate(ISIStrxvuBitrate bitrate);
+
+Boolean trxvu_send_message(unsigned char const* data, unsigned short length);
+
 #endif /* MODULES_M_TRXVU_H_ */
