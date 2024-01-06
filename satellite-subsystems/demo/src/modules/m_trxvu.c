@@ -80,8 +80,8 @@ static void _WatchDogKickTask(void *parameters)
 	}
 }
 
-static unsigned char from_callsign[] = "TEVELKQ";
-static unsigned char to_callsign[] = "KQ-GNDS";
+static unsigned char from_callsign[] = "TVLKQ1";
+static unsigned char to_callsign[] = "KQ-GND";
 Boolean m_trxvu_init(void)
 {
     // Definition of I2C and TRXUV
