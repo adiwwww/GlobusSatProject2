@@ -166,18 +166,8 @@ static Boolean vutc_setTxBitrate1200Test(void)
 
 static Boolean vurc_getFrameCountTest(void)
 {
-	unsigned short RxCounter = 0;
-	unsigned int timeoutCounter = 0;
-
-	while(timeoutCounter < 4*TIMEOUT_UPBOUND)
-	{
-	    print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-		timeoutCounter++;
-
-		vTaskDelay(10 / portTICK_RATE_MS);
-	}
-	printf("\r\n There are currently %d frames waiting in the RX buffer \r\n", RxCounter);
+	int c = trxvu_count_incoming_frames();
+	printf("\r\n There are currently %d frames waiting in the RX buffer \r\n", c);
 
 	return TRUE;
 }
@@ -195,7 +185,10 @@ static Boolean vurc_getFrameCmdTest(void)
 
 	while(RxCounter > 0)
 	{
-		print_error(IsisTrxvu_rcGetCommandFrame(0, &rxFrameCmd));
+		if (!trxvu_get_frame(&rxFrameCmd)){
+			printf("Error retrieving incoming frame\n");
+			break;
+		}
 
 		printf("Size of the frame is = %d \r\n", rxFrameCmd.rx_length);
 
