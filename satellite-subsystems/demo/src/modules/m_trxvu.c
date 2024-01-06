@@ -70,7 +70,7 @@ int trxvu_count_incoming_frames(void)
 {
 	unsigned short count = 0;
 	int r = IsisTrxvu_rcGetFrameCount(0, &count);
-	return r == E_NO_SS_ERR;
+	return r == E_NO_SS_ERR ? count : 0;
 }
 
 Boolean trxvu_get_frame(ISIStrxvuRxFrame* frame)
