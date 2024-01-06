@@ -57,7 +57,7 @@ Boolean trxvu_send_message(unsigned char const* data, unsigned short length);
  * Retrieve the number of telecommand frames present in the receive buffer of the TRXVU.
  * @return number of frames
  */
-int trxv_get_incoming_frames(void);
+int trxvu_count_incoming_frames(void);
 
 /**
  * Retrieve and delete a telecommand frame from the TRXVU.

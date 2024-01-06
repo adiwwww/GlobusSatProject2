@@ -66,7 +66,7 @@ Boolean trxvu_send_message(unsigned char const* data, unsigned short length)
 	return r == E_NO_SS_ERR;
 }
 
-int trxv_get_incoming_frames(void)
+int trxvu_count_incoming_frames(void)
 {
 	unsigned short count = 0;
 	int r = IsisTrxvu_rcGetFrameCount(0, &count);
