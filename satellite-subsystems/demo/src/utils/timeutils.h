@@ -5,9 +5,9 @@
  *      Author: Muhammad Zahalqa
  */
 
-#ifndef UTILS_TIME_H_
-#define UTILS_TIME_H_
+#ifndef UTILS_TIMEUTILS_H_
+#define UTILS_TIMEUTILS_H_
 
 void delay_ms(int milliseconds);
 
-#endif /* UTILS_TIME_H_ */
+#endif /* UTILS_TIMEUTILS_H_ */

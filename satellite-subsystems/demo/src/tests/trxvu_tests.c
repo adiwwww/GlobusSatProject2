@@ -7,13 +7,12 @@
 
 #include "trxvu_tests.h"
 #include "modules/m_gomeps.h"
+#include "modules/m_trxvu.h"
 
 #include "utils/input.h"
-#include "utils/time.h"
+#include "utils/timeutils.h"
 #include "utils/error_report.h"
 #include "utils/menu_selection.h"
-
-#include <satellite-subsystems/IsisTRXVU.h>
 
 #include <hal/errors.h>
 
@@ -87,6 +86,11 @@ static Boolean set_responder_rssi(void)
 	return TRUE;
 }
 
+static Boolean get_incoming_frames_test(void)
+{
+
+	return TRUE;
+}
 
 static MenuAction menu[] = {
 			{ transmit_fixed_message_test, "Transmit fixed text message" },
@@ -95,7 +99,8 @@ static MenuAction menu[] = {
 			{ activate_responder_test, "Activate responder" },
 			{ deactivate_responder_test, "Deactivate responder" },
 			{ automatic_responder_stop_test, "Activate responder for a time interval" },
-			{ set_responder_rssi, "Set Responder RSSI threshold test"},
+			{ set_responder_rssi, "Set Responder RSSI threshold test" },
+			{ get_incoming_frames_test, "Get incoming RX frames test" },
 			MENU_ITEM_END
 };
 
