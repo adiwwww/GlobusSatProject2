@@ -34,7 +34,7 @@
 
 Boolean trxvu_activate_responder(void)
 {
-	unsigned char cmd[] = {SET_TRANSMITTER_MODE, NOMINAL_MODE | RESPONDER_MODE};
+	unsigned char cmd[] = {SET_TRANSMITTER_MODE, RESPONDER_MODE};
 	return 0 == I2C_write(TRXVU_TC_ADDRESS, cmd, sizeof(cmd));
 }
 
