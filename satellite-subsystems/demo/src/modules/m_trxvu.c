@@ -70,17 +70,25 @@ int trxvu_count_incoming_frames(void)
 {
 	unsigned short count = 0;
 	int r = IsisTrxvu_rcGetFrameCount(0, &count);
-	return r == E_NO_SS_ERR ? count : 0;
+	return (r == E_NO_SS_ERR) ? count : 0;
 }
 
-Boolean trxvu_get_frame(ISIStrxvuRxFrame* frame)
+TrxvuRxFrame* trxvu_get_frame()
 {
-	if (!frame || !frame->rx_framedata){
-		return FALSE;
+	static unsigned char rxframebuffer[M_TRXVU_RX_FRAME_SIZE] = {0};
+	static ISIStrxvuRxFrame rxFrameCmd = {0,0,0, rxframebuffer};
+	static TrxvuRxFrame rxframe;
+
+	int r = IsisTrxvu_rcGetCommandFrame(0, &rxFrameCmd);
+	if (r == E_NO_SS_ERR) {
+		rxframe.doppler = ((double)rxFrameCmd.rx_doppler) * 13.352 - 22300.0;
+		rxframe.rssi = ((double)rxFrameCmd.rx_rssi) * 0.03 - 152;
+		rxframe.length = rxFrameCmd.rx_length;
+		rxframe.framedata = rxframebuffer;
+		return &rxframe;
 	}
 
-	int r = IsisTrxvu_rcGetCommandFrame(0, frame);
-	return r == E_NO_SS_ERR;
+	return NULL;
 }
 
 static xTaskHandle watchdogKickTaskHandle = NULL;

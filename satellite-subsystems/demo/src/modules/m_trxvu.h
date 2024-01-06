@@ -15,6 +15,15 @@
 #define M_TRXVU_RX_FRAME_SIZE		(30)
 #define M_TRXVU_TX_FRAME_SIZE		(235)
 
+
+typedef struct __attribute__ ((__packed__)) TrxvuRxFrame
+{
+    unsigned short length; ///< Reception frame length.
+    double doppler; ///< Reception frame doppler measurement.
+    double rssi; ///< Reception frame rssi measurement.
+    unsigned char* framedata; ///< Pointer to an array receiving reception frame data.
+} TrxvuRxFrame;
+
 /**
  * Initialize the TRXVU component
  * @return TRUE on success
@@ -61,9 +70,8 @@ int trxvu_count_incoming_frames(void);
 
 /**
  * Retrieve and delete a telecommand frame from the TRXVU.
- * @param frame Received frame structure
- * @return TRUE in success
+ * @return pointer to static TrxvuRxFrame with static buffer for data
  */
-Boolean trxvu_get_frame(ISIStrxvuRxFrame* frame);
+TrxvuRxFrame* trxvu_get_frame();
 
 #endif /* MODULES_M_TRXVU_H_ */
