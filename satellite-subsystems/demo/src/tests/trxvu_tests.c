@@ -46,8 +46,6 @@ static Boolean transmit_user_message_test(void)
 	printf("Will send: %s \r\n", buffer);
 	printf("  repeats: %d \r\n", repeats);
 
-	unsigned char avalFrames = 0;
-
 	for (int i = 0; i < repeats; ++i) {
 		if (trxvu_send_message(buffer, ARRAY_SIZE(buffer))) {
 			printf("OK Transmit [%d]: %s\r\n", i, buffer);
