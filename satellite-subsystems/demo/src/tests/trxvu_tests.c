@@ -21,8 +21,11 @@
 
 static Boolean transmit_fixed_message_test(void)
 {
-	unsigned char buffer[] = "Starman say: Hello World from CUBESAT: K.Qari3";
-	printf("Message to be sent: [%s]\r\n", buffer);
+	unsigned char buffer[] = "There's a starman waiting in the sky\n"
+							 "He'd like to come and meet us\n"
+							 "But he thinks he'd blow our minds\n"
+							 "CUBESAT: K.Qari3.";
+	printf("Message to be sent:\n%s\r\n", buffer);
 	int repeats = INPUT_GetINT8("How many times do you want to send this: ");
 
 	for (int i = 0; i < repeats; ++i) {
