@@ -22,18 +22,15 @@
 
 static Boolean transmit_fixed_message_test(void)
 {
-	unsigned char buffer[] = "HELLO WORLD FROM CUBE-SAT KQ";
+	unsigned char buffer[] = "Starman say: Hello World from CUBESAT: K.Qari3";
 	printf("Message to be sent: [%s]\r\n", buffer);
 	int repeats = INPUT_GetINT8("How many times do you want to send this: ");
 
-	unsigned char avalFrames = 0;
 	for (int i = 0; i < repeats; ++i) {
-		int r = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer), &avalFrames);
-
-		if (r == E_NO_SS_ERR) {
-			printf("OK Transmitting [%d]: %s\r\n", i, buffer);
+		if (trxvu_send_message(buffer, ARRAY_SIZE(buffer))) {
+			printf("OK Transmit [%d]: %s\r\n", i, buffer);
 		} else {
-			print_error(r);
+			printf("FAIL Transmit [%d]: %s\r\n", i, buffer);
 		}
 
 		delay_ms(200);
@@ -65,9 +62,40 @@ static Boolean transmit_user_message_test(void)
 	return TRUE;
 }
 
+static Boolean set_ax25_bitrate_test(void)
+{
+	return TRUE;
+}
+
+static Boolean activate_responder_test(void)
+{
+	return TRUE;
+}
+
+static Boolean deactivate_responder_test(void)
+{
+	return TRUE;
+}
+
+static Boolean automatic_responder_stop_test(void)
+{
+	return TRUE;
+}
+
+static Boolean set_responder_rssi(void)
+{
+	return TRUE;
+}
+
+
 static MenuAction menu[] = {
 			{ transmit_fixed_message_test, "Transmit fixed text message" },
 			{ transmit_user_message_test, "Transmit message defined by user" },
+			{ set_ax25_bitrate_test, "Set AX.25 bit rate" },
+			{ activate_responder_test, "Activate responder" },
+			{ deactivate_responder_test, "Deactivate responder" },
+			{ automatic_responder_stop_test, "Activate responder for a time interval" },
+			{ set_responder_rssi, "Set Responder RSSI threshold test"},
 			MENU_ITEM_END
 };
 
