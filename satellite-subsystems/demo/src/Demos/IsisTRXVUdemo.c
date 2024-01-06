@@ -9,7 +9,9 @@
 #include "modules/m_gomeps.h"
 #include "modules/m_trxvu.h"
 
-#include "input.h"
+#include "utils/input.h"
+#include "utils/printutils.h"
+#include "utils/time.h"
 #include "utils/menu_selection.h"
 #include "trxvu_frame_ready.h"
 #include "config/i2c_address.h"
@@ -45,7 +47,7 @@
 #define TIMEOUT_UPBOUND			10
 
 #define SIZE_RXFRAME	30
-#define SIZE_TXFRAME	235
+#define SIZE_TXFRAME	 235
 
 static xSemaphoreHandle trxvuInterruptTrigger = NULL;
 
@@ -174,38 +176,21 @@ static Boolean vurc_getFrameCountTest(void)
 
 static Boolean vurc_getFrameCmdTest(void)
 {
-	unsigned short RxCounter = 0;
-	unsigned int i = 0;
-	unsigned char rxframebuffer[SIZE_RXFRAME] = {0};
-	ISIStrxvuRxFrame rxFrameCmd = {0,0,0, rxframebuffer};
+	int count = trxvu_count_incoming_frames();
+	printf("\r\nThere are currently %d frames waiting in the RX buffer\r\n", count);
 
-	print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-	printf("\r\nThere are currently %d frames waiting in the RX buffer\r\n", RxCounter);
-
-	while(RxCounter > 0)
-	{
-		if (!trxvu_get_frame(&rxFrameCmd)){
+	for (int i = 0; i < count; ++i) {
+		TrxvuRxFrame* pframe = trxvu_get_frame();
+		if (!pframe) {
 			printf("Error retrieving incoming frame\n");
 			break;
 		}
 
-		printf("Size of the frame is = %d \r\n", rxFrameCmd.rx_length);
-
-		printf("Frequency offset (Doppler) for received frame: %.2f Hz\r\n", ((double)rxFrameCmd.rx_doppler) * 13.352 - 22300.0); // Only valid for rev. B & C boards
-		printf("Received signal strength (RSSI) for received frame: %.2f dBm\r\n", ((double)rxFrameCmd.rx_rssi) * 0.03 - 152);
-
-		printf("The received frame content is = ");
-
-		for(i = 0; i < rxFrameCmd.rx_length; i++)
-		{
-			printf("%02x ", rxFrameCmd.rx_framedata[i]);
-		}
-		printf("\r\n");
-
-		print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-		vTaskDelay(10 / portTICK_RATE_MS);
+		printf("Received signal strength (RSSI) for received frame: %.2f dBm\r\n", pframe->rssi);
+		printf("Frequency offset (Doppler) for received frame: %.2f Hz\r\n", pframe->doppler);
+		printf("Size of the frame data: %d \r\n", pframe->length);
+		print_hex_array(pframe->framedata, pframe->length);
+		delay_ms(25);
 	}
 
 	return TRUE;
