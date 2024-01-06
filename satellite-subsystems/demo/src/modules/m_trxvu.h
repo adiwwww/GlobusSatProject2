@@ -45,6 +45,25 @@ Boolean trxvu_set_responder_rssi_threshold(uint16_t rssi);
  */
 Boolean trxvu_set_ax25_bitrate(ISIStrxvuBitrate bitrate);
 
+/**
+ * Send a message using default to/from callsigns
+ * @param data	message data
+ * @param length message length
+ * @return
+ */
 Boolean trxvu_send_message(unsigned char const* data, unsigned short length);
+
+/**
+ * Retrieve the number of telecommand frames present in the receive buffer of the TRXVU.
+ * @return number of frames
+ */
+int trxv_get_incoming_frames(void);
+
+/**
+ * Retrieve and delete a telecommand frame from the TRXVU.
+ * @param frame Received frame structure
+ * @return TRUE in success
+ */
+Boolean trxvu_get_frame(ISIStrxvuRxFrame* frame);
 
 #endif /* MODULES_M_TRXVU_H_ */

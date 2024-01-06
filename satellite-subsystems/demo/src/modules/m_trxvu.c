@@ -66,6 +66,23 @@ Boolean trxvu_send_message(unsigned char const* data, unsigned short length)
 	return r == E_NO_SS_ERR;
 }
 
+int trxv_get_incoming_frames(void)
+{
+	unsigned short count = 0;
+	int r = IsisTrxvu_rcGetFrameCount(0, &count);
+	return r == E_NO_SS_ERR;
+}
+
+Boolean trxvu_get_frame(ISIStrxvuRxFrame* frame)
+{
+	if (!frame || !frame->rx_framedata){
+		return FALSE;
+	}
+
+	int r = IsisTrxvu_rcGetCommandFrame(0, frame);
+	return r == E_NO_SS_ERR;
+}
+
 static xTaskHandle watchdogKickTaskHandle = NULL;
 
 static void _WatchDogKickTask(void *parameters)
