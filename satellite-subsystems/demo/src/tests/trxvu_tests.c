@@ -40,7 +40,7 @@ static Boolean transmit_fixed_message_test(void)
 
 static Boolean transmit_user_message_test(void)
 {
-	unsigned char buffer[80] = {0};
+	unsigned char buffer[81] = {0};
 	INPUT_GetSTRING("What message do you want to send: ", (char*)buffer, 80);
 	int repeats = INPUT_GetINT8("How many times do you want to send it: ");
 	printf("Will send: %s \r\n", buffer);
@@ -49,10 +49,10 @@ static Boolean transmit_user_message_test(void)
 	unsigned char avalFrames = 0;
 
 	for (int i = 0; i < repeats; ++i) {
-		int r = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer), &avalFrames);
-		print_error(r);
-		if (r == E_NO_SS_ERR) {
-			printf("OK Transmitting [%d]: %s\r\n", i, buffer);
+		if (trxvu_send_message(buffer, ARRAY_SIZE(buffer))) {
+			printf("OK Transmit [%d]: %s\r\n", i, buffer);
+		} else {
+			printf("FAIL Transmit [%d]: %s\r\n", i, buffer);
 		}
 
 		delay_ms(200);
