@@ -33,7 +33,7 @@
 #include <hal/version/version.h>
 
 #include <stdlib.h>
-
+#include <stdio.h>
 
 #define ENABLE_MAIN_TRACES 1
 #if ENABLE_MAIN_TRACES
