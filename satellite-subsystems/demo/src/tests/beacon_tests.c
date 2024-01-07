@@ -15,21 +15,35 @@ Boolean basic_beacon_message_test(void)
 	return TRUE;
 }
 
+Boolean stop_beacon_test(void)
+{
+
+	return TRUE;
+}
+
 Boolean telemetry_beacon_test(void)
 {
 	return TRUE;
 }
 
-Boolean periodic_telemetry_beacon_test(void)
+Boolean periodic_beacon_telemetry_test(void)
+{
+
+	return TRUE;
+}
+
+Boolean stop_periodic_beacon_test(void)
 {
 
 	return TRUE;
 }
 
 static MenuAction menu[] = {
-			{ basic_beacon_message_test, "Send text message as beacon"},
-			{ telemetry_beacon_test, "Send Basic telemetry Data as beacon"},
-			{ periodic_telemetry_beacon_test, "Periodically Collect and send telemetry Data"},
+			{ basic_beacon_message_test, "Send text message as beacon" },
+			{ telemetry_beacon_test, "Send Basic telemetry Data as beacon" },
+			{ stop_beacon_test, "Stop beacon" },
+			{ periodic_beacon_telemetry_test, "Periodic telemetry beacon task" },
+			{ stop_periodic_beacon_test, "Stop periodic telemetry beacon" },
 			MENU_ITEM_END
 };
 
