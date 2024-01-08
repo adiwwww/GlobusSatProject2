@@ -89,7 +89,7 @@ static Boolean get_number_range_test(void)
 	printf("Range input test\r\n");
 	int min = INPUT_GetINT32("Enter range min: ");
 	int max = INPUT_GetINT32("Enter range max: ");
-	printf("Enter a number between %d and %d\n");
+	printf("Enter a number between %d and %d\n", min, max);
 	int n = INPUT_GetLong_Range("Number: ", min, max);
 	printf("You have entered: %d\n", n);
 
