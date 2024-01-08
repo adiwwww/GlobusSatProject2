@@ -84,6 +84,18 @@ static Boolean mul_test(void)
 	return TRUE;
 }
 
+static Boolean get_number_range_test(void)
+{
+	printf("Range input test\r\n");
+	int min = INPUT_GetINT32("Enter range min: ");
+	int max = INPUT_GetINT32("Enter range max: ");
+	printf("Enter a number between %d and %d\n");
+	int n = INPUT_GetLong_Range("Number: ", min, max);
+	printf("You have entered: %d\n", n);
+
+	return TRUE;
+}
+
 static MenuAction system_menu[] = {
 			{ endian_test, "Platform Endianess test"},
 			{ data_types_sizes_test, "Data types size test"},
@@ -91,6 +103,7 @@ static MenuAction system_menu[] = {
 			{ sum_a_number_test, "Test sum a number"},
 			{ absolute_of_number_test, "Test absolute value of a number"},
 			{ mul_test, "Test mul of two num"},
+			{ get_number_range_test, "get number in range" },
 			MENU_ITEM_END
 };
 
