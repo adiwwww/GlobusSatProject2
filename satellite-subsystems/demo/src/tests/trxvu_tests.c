@@ -74,6 +74,12 @@ static Boolean activate_responder_test(void)
 
 static Boolean deactivate_responder_test(void)
 {
+	if (trxvu_deactivate_responder()){
+		printf("it was deactivated\n");
+	} else {
+	    printf("Failed\n");
+	}
+
 	return TRUE;
 }
 
@@ -110,3 +116,4 @@ Boolean trxvu_tests(void)
 	MenuDisplay(menu);
 	return TRUE;
 }
+
