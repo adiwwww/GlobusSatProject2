@@ -95,7 +95,7 @@ int16_t INPUT_GetINT16( char const* printStr )
 
 int32_t INPUT_GetINT32( char const* printStr )
 {
-	return (uint32_t)INPUT_GetLong_Range(printStr, INT32_MIN, INT32_MAX);
+	return (int32_t)INPUT_GetLong_Range(printStr, INT32_MIN, INT32_MAX);
 }
 
 uint8_t INPUT_GetUINT8( char const* printStr )
