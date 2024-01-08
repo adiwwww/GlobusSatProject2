@@ -69,10 +69,11 @@ static Boolean set_ax25_bitrate_test(void)
 
 static Boolean activate_responder_test(void)//
 {
-	if(trxvu_activate_responder())
+	if (trxvu_activate_responder()) {
 		printf("it is Work");
-	else
+	} else {
 		printf("Falid work");
+	}
 	return TRUE;
 }
 
