@@ -8,6 +8,7 @@
 #include "tests/system_c_tests.h"
 #include "tests/beacon_tests.h"
 #include "tests/solar_panel_tests.h"
+#include "tests/antenna_tests.h"
 
 #include "Demos/demos.h"
 
@@ -57,6 +58,7 @@ static MenuAction main_menu[] = {
 			{ gom_eps_test, "New GOMSpace Tests"},
 			{ trxvu_tests, "New TRXVU Tests"},
 			{ solar_panels_tests, "Solar Panels Tests" },
+			{ antenna_tests, "Antennas Tests" },
 			{ SystemCTest, "System C Tests"},
 			END_OF_MENU
 };
