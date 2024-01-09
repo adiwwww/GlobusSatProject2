@@ -30,6 +30,11 @@ Boolean m_solar_panels_init(void)
 	return TRUE;
 }
 
+Boolean solar_panels_is_awake(void)
+{
+	return IsisSolarPanelv2_getState() == ISIS_SOLAR_PANEL_STATE_AWAKE;
+}
+
 Boolean solar_panels_wakeup(void)
 {
 	int rv = IsisSolarPanelv2_wakeup();
@@ -39,8 +44,7 @@ Boolean solar_panels_wakeup(void)
 	}
 
 	for (int i = 0; i < 8; ++i) {
-		IsisSolarPanelv2_State_t state = IsisSolarPanelv2_getState();
-		if (state == ISIS_SOLAR_PANEL_STATE_AWAKE) {
+		if (solar_panels_is_awake()) {
 			return TRUE;
 		}
 		delay_ms(100);

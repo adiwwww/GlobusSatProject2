@@ -13,6 +13,8 @@
 
 Boolean m_solar_panels_init(void);
 
+Boolean solar_panels_is_awake(void);
+
 Boolean solar_panels_wakeup(void);
 
 Boolean solar_panels_sleep(void);
