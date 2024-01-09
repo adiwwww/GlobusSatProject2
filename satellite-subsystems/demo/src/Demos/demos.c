@@ -26,14 +26,16 @@
 
 
 static MenuAction menu[] = {
-			{ TRXVUtest, "TRXVU Tests" },
-			{ HSTxStest, "HSTxS Tests" },
-			{ AntStest, "Antenna Tests" },
-			{ SolarPanelv2test, "Solar Panels Tests" },
-			{ IsisMTQv2test, "MTQ V2 Tests" },
-			{ isis_eps__test, "ISIS EPS Tests" },
-			{ GomEPStest, "GOM EPS Tests" },
-			MENU_ITEM_END
+		{ TRXVUtest, "TRXVU Tests" },
+		{ HSTxStest, "HSTxS Tests" },
+		{ AntStest, "Antenna Tests" },
+		{ AntS2test, "AntS2 tests" },
+		{ SolarPaneltest, "Solar Panel Tests" },
+		{ SolarPanelv2test, "Solar Panels V2 Tests" },
+		{ IsisMTQv2test, "MTQ V2 Tests" },
+		{ isis_eps__test, "ISIS EPS Tests" },
+		{ GomEPStest, "GOM EPS Tests" },
+		MENU_ITEM_END
 };
 
 Boolean demo_tests(void)
