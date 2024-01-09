@@ -73,3 +73,22 @@ Boolean antenna_reset(void)
 
 	return TRUE;
 }
+
+AntennaTelemetry* antenna_get_telemetry(void)
+{
+	static AntennaTelemetry telemtry_translated;
+	ISISantsTelemetry telemtry;
+
+	for (int i = 0; i < 2; ++i) {
+		int rv = IsisAntS_getAlltelemetry(0, i, &telemtry);
+		if (rv != 0) {
+			return NULL;
+		}
+
+		telemtry_translated.side[i].uptime = telemtry.fields.ants_uptime;
+		telemtry_translated.side[i].temperature = (telemtry.fields.ants_temperature * -0.2922) + 190.65;
+	}
+
+	return &telemtry_translated;
+}
+

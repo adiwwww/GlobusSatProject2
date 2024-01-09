@@ -47,10 +47,21 @@ Boolean get_ants_uptime(void)
 	return TRUE;
 }
 
+Boolean get_ants_telemetry(void)
+{
+	AntennaTelemetry* telem = antenna_get_telemetry();
+	for (int i = 0; i < 2; ++i) {
+		printf("Side %c: Status[%d]  Uptime:%u\n", 'A'+i, telem->side[i].status.fields.ant1Undeployed, telem->side[0].uptime);
+	}
+
+	return TRUE;
+}
+
 static MenuAction menu[] = {
 		{ reset_antenna, "Reset antenna subsystem" },
 		{ get_ants_temperature, "Get Antenna Temperature" },
 		{ get_ants_uptime, "get Antenna Uptime" },
+		{ get_ants_telemetry, "Get Antennas Telemetry" },
 		MENU_ITEM_END
 };
 
@@ -58,5 +69,4 @@ Boolean antenna_tests(void)
 {
 	MenuDisplay(menu);
 	return TRUE;
-
 }
