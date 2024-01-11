@@ -39,8 +39,8 @@ Boolean get_ants_telemetry(void)
 
 	for(int i = 0; i<2; i++) {
 		printf("Antenna side [%d] Telemetry: \n", i+1);
-		printf(" Antenna side [%d] Temperature: %f degrees celsius \n", i+1, ants_tel->side[0].temperature);
-		printf(" Antenna side [%d] Uptime: %u seconds \n", i+1, ants_tel->side[0].uptime);
+		printf(" Antenna side [%d] Temperature: %f degrees celsius \n", i+1, ants_tel->side[i].temperature);
+		printf(" Antenna side [%d] Uptime: %u seconds \n", i+1, ants_tel->side[i].uptime);
 	}
 
 	return TRUE;
