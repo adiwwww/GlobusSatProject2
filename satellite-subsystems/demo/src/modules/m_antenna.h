@@ -11,7 +11,6 @@
 #include <hal/boolean.h>
 #include <satellite-subsystems/IsisAntS.h>
 
-//#include <satellite-subsystems/Isis.h>
 
 typedef struct AntennaTelemetry {
 	struct __attribute__ ((__packed__)) {
