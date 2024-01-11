@@ -25,15 +25,15 @@ Boolean get_ants_temperature(void)
 	if (temp==-270) {
 		printf("Sending temperature failed\n ");
 	} else {
-		printf("Side A  temperature is : %f\n",temp);
+		printf("Side A  temperature is : %f\n", temp);
 	}
 
-	 temp = antenna_get_temperature(isisants_sideB);
-		if (temp==-270) {
-			printf("Sending temperature failed\n ");
-		} else {
-			printf("Side B  temperature is : %f\n",temp);
-		}
+	temp = antenna_get_temperature(isisants_sideB);
+	if (temp==-270) {
+		printf("Sending temperature failed\n ");
+	} else {
+		printf("Side B  temperature is : %f\n", temp);
+	}
 
 	return TRUE;
 }
