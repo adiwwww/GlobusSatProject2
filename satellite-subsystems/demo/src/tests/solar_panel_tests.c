@@ -22,11 +22,21 @@ Boolean get_solar_panels_sensor_state(void)
 
 Boolean activate_solar_panels_sensor(void)
 {
+	if (solar_panels_wakeup()) {
+		printf("Solar panel sensors activated.");
+	} else {
+		printf("Solar panel activation failed.");
+	}
 	return TRUE;
 }
 
 Boolean shutdown_solar_panels_sensor(void)
 {
+	if (solar_panels_sleep()) {
+		printf("The sensors have been shutdown.");
+	} else {
+		printf("Sensor shutdown failed.");
+	}
 	return TRUE;
 }
 
