@@ -12,7 +12,11 @@
 
 Boolean get_solar_panels_sensor_state(void)
 {
-
+	if (solar_panels_is_awake()) {
+		printf("The sensors are currently active.");
+	} else {
+		printf("The sensors aren't active.");
+	}
 	return TRUE;
 }
 
