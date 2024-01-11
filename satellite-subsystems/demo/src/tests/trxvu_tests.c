@@ -64,15 +64,18 @@ static Boolean transmit_user_message_test(void)
 
 static Boolean set_ax25_bitrate_test(void)
 {
-	int bitrate = INPUT_GetINT_MinMax("Enter the new bitrate number:",1200,9600);
-	while(bitrate != 1200 || bitrate != 2400 || bitrate != 4800 || bitrate != 9600){
+	printf("Enter the new bitrate number:");
+	int bitrate = INPUT_GetINT_MinMax("These are the allowed bitrates:\n1)1200\n2)2400\n3)4800\n4)9600",1200,9600);
+	while (bitrate != 1200 && bitrate != 2400 && bitrate != 4800 && bitrate != 9600) {
 		bitrate = INPUT_GetINT_MinMax("Invalid number , try again:",1200,9600);
 	}
 	Boolean isSuccesful = trxvu_set_ax25_bitrate(bitrate);
-	if(isSuccesful)
+	if (isSuccesful) {
 		printf("Bitrate changed successfully , New Bitrate has been set to: %d", bitrate);
-	else
+	}
+	else{
 		printf("Bitrate change failed");
+	}
 	return isSuccesful;
 }
 
