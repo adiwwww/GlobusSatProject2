@@ -27,8 +27,21 @@ Boolean get_ants_temperature(void)
 
 Boolean get_ants_uptime(void)
 {
+	int time = antenna_get_uptime(isisants_sideA);
+		if (time==0) {
+			printf("Sending uptime failed\n ");
+		} else {
+			printf("Side A uptime is : %d\n", time);
+		}
 
-	return TRUE;
+		time = antenna_get_uptime(isisants_sideB);
+		if (time==0) {
+			printf("Sending uptime failed\n ");
+		} else {
+			printf("Side B  uptime is : %d\n", time);
+		}
+
+		return TRUE;
 }
 
 Boolean get_ants_telemetry(void)
