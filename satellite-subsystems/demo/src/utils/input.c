@@ -164,7 +164,6 @@ int INPUT_GetINT_MinMax(char const* printStr, int min, int max)
 {
 	for(;;) {
 		int result = INPUT_GetINT32(printStr);
-		printf("Got input: %d\n", result);
 		if ( min <= result && result <= max){
 			return result;
 		}
@@ -180,36 +179,33 @@ static int _GetInput( char* input, int len )
 	index = 0;
 	inputOK = 0;
 
-	do
-	{
-		do
-		{
+	do {
+		do {
 			WDT_forceKickEveryNms(10);
 			vTaskDelay(1);
 			/* TODO: timeout ? */
-		}
-		while( !DBGU_IsRxReady() );
+		} while( !DBGU_IsRxReady() );
 
 		key = DBGU_GetChar();
 		DBGU_PutChar( key );
 
-		if( key == 0x0A || key == 0x0D )
-		{
+		if( key == 0x0A || key == 0x0D ) {
 			printf("\n\r");
 			input[index] = 0; /* terminate string */
 			inputOK = 1;
 			break;
-		}
-		else if( key == 0x08 || key == 0x7F )
-		{
-			index--; /* backspace */
-		}
-		else
-		{
+		} else if ( key == 0x08 || key == 0x7F ) {
+			if (index > 0) {
+				--index;     /* backspace */
+			}
+		} else {
 			input[index++] = key;
 		}
+	} while( index < len - 1 );
+
+	if (input[index] != 0) {
+		input[index] = 0;
 	}
-	while( index < len );
 
 	return inputOK;
 }
