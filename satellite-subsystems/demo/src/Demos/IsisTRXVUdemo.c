@@ -6,8 +6,16 @@
  */
 
 #include "common.h"
-#include "trxvu_frame_ready.h"
+#include "modules/m_gomeps.h"
+#include "modules/m_trxvu.h"
 
+#include "utils/input.h"
+#include "utils/printutils.h"
+#include "utils/timeutils.h"
+#include "utils/menu_selection.h"
+
+#include "trxvu_frame_ready.h"
+#include "config/i2c_address.h"
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 #include <freertos/task.h>
@@ -40,9 +48,8 @@
 #define TIMEOUT_UPBOUND			10
 
 #define SIZE_RXFRAME	30
-#define SIZE_TXFRAME	235
+#define SIZE_TXFRAME	 235
 
-static xTaskHandle watchdogKickTaskHandle = NULL;
 static xSemaphoreHandle trxvuInterruptTrigger = NULL;
 
 // Test Function
@@ -94,6 +101,40 @@ static Boolean vutc_sendDefClSignTest(void)
 	return TRUE;
 }
 
+static Boolean vutc_sendInputTest(void)
+{
+	//Buffers and variables definition
+	unsigned char buffer[16]  = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x40,' ', ' ', '!', '!', 0};
+	unsigned char txCounter = 0;
+	unsigned char avalFrames = 0;
+	unsigned int timeoutCounter = 0;
+
+	printf("\r\n Transmission of user input. \r\n");
+	printf("Input a up to 10 hex numbers: \r\n");
+	GetHexBuffer(buffer, ARRAY_SIZE(buffer)-1);
+
+	while(txCounter < 5 && timeoutCounter < 5)
+	{
+		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
+		int error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer)*sizeof(int), &avalFrames);
+		print_error(error_result);
+
+		if ((avalFrames != 0)&&(avalFrames != 255))
+		{
+			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
+			++txCounter;
+		}
+		else
+		{
+			vTaskDelay(200 / portTICK_RATE_MS);
+			++timeoutCounter;
+		}
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+
+	return TRUE;
+}
+
 static Boolean vutc_toggleIdleStateTest(void)
 {
 	static Boolean toggle_flag = 0;
@@ -128,53 +169,29 @@ static Boolean vutc_setTxBitrate1200Test(void)
 
 static Boolean vurc_getFrameCountTest(void)
 {
-	unsigned short RxCounter = 0;
-	unsigned int timeoutCounter = 0;
-
-	while(timeoutCounter < 4*TIMEOUT_UPBOUND)
-	{
-	    print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-		timeoutCounter++;
-
-		vTaskDelay(10 / portTICK_RATE_MS);
-	}
-	printf("\r\n There are currently %d frames waiting in the RX buffer \r\n", RxCounter);
+	int c = trxvu_count_incoming_frames();
+	printf("\r\n There are currently %d frames waiting in the RX buffer \r\n", c);
 
 	return TRUE;
 }
 
 static Boolean vurc_getFrameCmdTest(void)
 {
-	unsigned short RxCounter = 0;
-	unsigned int i = 0;
-	unsigned char rxframebuffer[SIZE_RXFRAME] = {0};
-	ISIStrxvuRxFrame rxFrameCmd = {0,0,0, rxframebuffer};
+	int count = trxvu_count_incoming_frames();
+	printf("\r\nThere are currently %d frames waiting in the RX buffer\r\n", count);
 
-	print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-	printf("\r\nThere are currently %d frames waiting in the RX buffer\r\n", RxCounter);
-
-	while(RxCounter > 0)
-	{
-		print_error(IsisTrxvu_rcGetCommandFrame(0, &rxFrameCmd));
-
-		printf("Size of the frame is = %d \r\n", rxFrameCmd.rx_length);
-
-		printf("Frequency offset (Doppler) for received frame: %.2f Hz\r\n", ((double)rxFrameCmd.rx_doppler) * 13.352 - 22300.0); // Only valid for rev. B & C boards
-		printf("Received signal strength (RSSI) for received frame: %.2f dBm\r\n", ((double)rxFrameCmd.rx_rssi) * 0.03 - 152);
-
-		printf("The received frame content is = ");
-
-		for(i = 0; i < rxFrameCmd.rx_length; i++)
-		{
-			printf("%02x ", rxFrameCmd.rx_framedata[i]);
+	for (int i = 0; i < count; ++i) {
+		TrxvuRxFrame* pframe = trxvu_get_frame();
+		if (!pframe) {
+			printf("Error retrieving incoming frame\n");
+			break;
 		}
-		printf("\r\n");
 
-		print_error(IsisTrxvu_rcGetFrameCount(0, &RxCounter));
-
-		vTaskDelay(10 / portTICK_RATE_MS);
+		printf("Received signal strength (RSSI) for received frame: %.2f dBm\r\n", pframe->rssi);
+		printf("Frequency offset (Doppler) for received frame: %.2f Hz\r\n", pframe->doppler);
+		printf("Size of the frame data: %d \r\n", pframe->length);
+		print_hex_array(pframe->framedata, pframe->length);
+		delay_ms(25);
 	}
 
 	return TRUE;
@@ -389,10 +406,12 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	}
 
 	telemetryValue = telemetry.fields.tx_reflpwr;
+	printf("RF reflected power ADC: %d.\r\n", telemetryValue);
 	eng_value = ((float)(telemetryValue * telemetryValue)) * 5.887E-5;
 	printf("RF reflected power = %f mW\r\n", eng_value);
 
 	telemetryValue = telemetry.fields.tx_fwrdpwr;
+	printf("RF forward power ADC: %d.\r\n", telemetryValue);
 	eng_value = ((float)(telemetryValue * telemetryValue)) * 5.887E-5;
 	printf("RF forward power = %f mW\r\n", eng_value);
 
@@ -427,154 +446,183 @@ static Boolean vutc_getTxTelemTest_revD(void)
 	return TRUE;
 }
 
-static Boolean selectAndExecuteTRXVUDemoTest(void)
+static Boolean SendTextMessage(void)
 {
-	int selection = 0;
-	Boolean offerMoreTests = TRUE;
+	unsigned char buffer[32] = {'?', 0};
+	printf("Enter a message(30): \r\n");
+	INPUT_GetSTRING("Enter message: ", (char*)buffer, ARRAY_SIZE(buffer)-1);
+	unsigned int repeats = INPUT_GetUINT8("How many times do you want to send this: ");
+	printf("Will send: %s \r\n", buffer);
+	printf("    Times: %d \r\n", repeats);
 
-	printf( "\n\r Select a test to perform: \n\r");
-	printf("\t 1) Soft Reset TRXVU both microcontrollers \n\r");
-	printf("\t 2) Hard Reset TRXVU both microcontrollers \n\r");
-	printf("\t 3) Default Callsign Send Test\n\r");
-	printf("\t 4) Toggle Idle state \n\r");
-	printf("\t 5) Change transmission bitrate to 9600  \n\r");
-	printf("\t 6) Change transmission bitrate to 1200 \n\r");
-	printf("\t 7) Get frame count \n\r");
-	printf("\t 8) Get command frame \n\r");
-	printf("\t 9) Get command frame and retransmit \n\r");
-	printf("\t 10) (revD) Get command frame by interrupt \n\r");
-	printf("\t 11) (revD) Get receiver telemetry \n\r");
-	printf("\t 12) (revD) Get transmitter telemetry \n\r");
-	printf("\t 13) Return to main menu \n\r");
+	unsigned char txCounter = 0;
+	unsigned char avalFrames = 0;
+	unsigned int timeoutCounter = 0;
 
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 13) == 0);
-
-	switch(selection) {
-	case 1:
-		offerMoreTests = softResetVUTest();
-		break;
-	case 2:
-		offerMoreTests = hardResetVUTest();
-		break;
-	case 3:
-		offerMoreTests = vutc_sendDefClSignTest();
-		break;
-	case 4:
-		offerMoreTests = vutc_toggleIdleStateTest();
-		break;
-	case 5:
-		offerMoreTests = vutc_setTxBitrate9600Test();
-		break;
-	case 6:
-		offerMoreTests = vutc_setTxBitrate1200Test();
-		break;
-	case 7:
-		offerMoreTests = vurc_getFrameCountTest();
-		break;
-	case 8:
-		offerMoreTests = vurc_getFrameCmdTest();
-		break;
-	case 9:
-		offerMoreTests = vurc_getFrameCmdAndTxTest();
-		break;
-    case 10:
-        offerMoreTests = vurc_getFrameCmdInterruptTest();
-        break;
-	case 11:
-		offerMoreTests = vurc_getRxTelemTest_revD();
-		break;
-	case 12:
-		offerMoreTests = vutc_getTxTelemTest_revD();
-		break;
-	case 13:
-		offerMoreTests = FALSE;
-		break;
-
-	default:
-		break;
-	}
-
-	return offerMoreTests;
-}
-
-static void _WatchDogKickTask(void *parameters)
-{
-	(void)parameters;
-	// Kick radio I2C watchdog by requesting uptime every 10 seconds
-	portTickType xLastWakeTime = xTaskGetTickCount ();
-	for(;;)
+	while(txCounter < repeats && timeoutCounter < repeats)
 	{
-		unsigned int uptime;
-		(void)IsisTrxvu_tcGetUptime(0, &uptime);
-		vTaskDelayUntil(&xLastWakeTime,10000);
+		printf("Transmitting [%d]: %s\r\n", txCounter, buffer);
+		int error_result = IsisTrxvu_tcSendAX25DefClSign(0, buffer, ARRAY_SIZE(buffer)*sizeof(int), &avalFrames);
+		print_error(error_result);
+
+		if ((avalFrames != 0)&&(avalFrames != 255))
+		{
+			printf("\r\n Number of frames in the buffer: %d  \r\n", avalFrames);
+			++txCounter;
+		}
+		else
+		{
+			vTaskDelay(200 / portTICK_RATE_MS);
+			++timeoutCounter;
+		}
+		vTaskDelay(100 / portTICK_RATE_MS);
 	}
-}
-
-Boolean IsisTRXVUdemoInit(void)
-{
-    // Definition of I2C and TRXUV
-	ISIStrxvuI2CAddress myTRXVUAddress[1];
-	ISIStrxvuFrameLengths myTRXVUBuffers[1];
-	ISIStrxvuBitrate myTRXVUBitrates[1];
-    int rv;
-
-	//I2C addresses defined
-	myTRXVUAddress[0].addressVu_rc = 0x60;
-	myTRXVUAddress[0].addressVu_tc = 0x61;
-
-	//Buffer definition
-	myTRXVUBuffers[0].maxAX25frameLengthTX = SIZE_TXFRAME;
-	myTRXVUBuffers[0].maxAX25frameLengthRX = SIZE_RXFRAME;
-
-	//Bitrate definition
-	myTRXVUBitrates[0] = trxvu_bitrate_1200;
-
-	//Initialize the trxvu subsystem
-	rv = IsisTrxvu_initialize(myTRXVUAddress, myTRXVUBuffers, myTRXVUBitrates, 1);
-	if(rv != E_NO_SS_ERR && rv != E_IS_INITIALIZED)
-	{
-		// we have a problem. Indicate the error. But we'll gracefully exit to the higher menu instead of
-		// hanging the code
-		TRACE_ERROR("\n\r IsisTrxvu_initialize() failed; err=%d! Exiting ... \n\r", rv);
-		return FALSE;
-	}
-
-	// Start watchdog kick task
-	xTaskCreate( _WatchDogKickTask,(signed char*)"WDT", 2048, NULL, tskIDLE_PRIORITY, &watchdogKickTaskHandle );
 
 	return TRUE;
 }
 
-void IsisTRXVUdemoLoop(void)
+static Boolean activateResponderTest(void)
 {
-	Boolean offerMoreTests = FALSE;
+	printf("Activate the responder \r\n");
+	if (trxvu_activate_responder()){
+		printf("Responder is ON.\r\n");
+	} else {
+		printf("Could not turn responder ON.\r\n");
+	}
 
-	while(1)
-	{
-		offerMoreTests = selectAndExecuteTRXVUDemoTest();	// show the demo command line interface and handle commands
+	return TRUE;
+}
 
-		if(offerMoreTests == FALSE)							// was exit/back selected?
-		{
-			break;
+static Boolean deActivateResponderTest(void)
+{
+	printf("Deactivate the responder \r\n");
+	if (trxvu_deactivate_responder()){
+		printf("Responder is OFF.\r\n");
+	} else {
+		printf("Could not turn responder OFF.\r\n");
+	}
+	return TRUE;
+}
+
+static void ShutdownResponderTask(void *parameters)
+{
+	int milli_seconds = *(unsigned int*) parameters;
+	vTaskDelay(milli_seconds / portTICK_RATE_MS);
+	if (trxvu_deactivate_responder()){
+		printf("Responder deactivated by task.\r\n");
+	} else {
+		printf("Task could not turn responder OFF.\r\n");
+	}
+	vTaskDelete(NULL);
+}
+
+static Boolean activateResponderAutoTest(void)
+{
+	// DOC: ISIS.TrxVU.ICD.001_v1.6 - TRXVU Interface Control Document_revD
+	// DOC: ISIS-TRXVU-ICD-00001A-ANNEX_A_TRXVU_transponder_mode-1_0
+
+	static unsigned int time_active;
+	static xTaskHandle deactivateResponderTaskHandle = NULL;
+
+	printf("Activate the responder \r\n");
+	time_active = INPUT_GetUINT32("Enter period in minutes to activate the responder: ");
+	time_active *= 60 * 1000;
+	printf("Activating the responder for %d milliseconds.\r\n", time_active);
+	// activate responder
+	if (trxvu_activate_responder()){
+		printf("Responder is ON.\r\n");
+		xTaskCreate(ShutdownResponderTask,(signed char*)"Responder Shutdown", 512, &time_active, tskIDLE_PRIORITY, &deactivateResponderTaskHandle );
+	} else {
+		printf("Could not turn responder ON.\r\n");
+	}
+
+	return TRUE;
+}
+
+static Boolean responder_set_rssi(void)
+{
+	uint16_t rssi = INPUT_GetUINT16("Enter an RSSI value between 0 and 4095: ");
+	trxvu_set_responder_rssi_threshold(rssi);
+	return TRUE;
+}
+
+static Boolean beacon_test(void)
+{
+	static unsigned char fromCallSign[7] = {'I', 'K', 'Q', 'H', 'S', '1', 0};
+	static unsigned char toCallSign[7] = {'I', 'K', 'Q', 'G', 'S', '2', 0};
+	static unsigned char data[82] = "KQ Cube Sat Lost in Space, abducted by grumpy old green aliens!";
+	printf("TRXVU Beacon test.\r\n");
+	INPUT_GetSTRING("Beacon Message (max 80 chars): ", (char*)data, sizeof(data));
+	unsigned short interval = INPUT_GetUINT16("Becon interval in seconds: ");
+	int r = IsisTrxvu_tcSetAx25BeaconOvrClSign(0, fromCallSign, toCallSign, data, sizeof(data), interval);
+	print_error(r);
+	return TRUE;
+}
+
+static Boolean clear_beacon_test(void)
+{
+	int r = IsisTrxvu_tcClearBeacon(0);
+	print_error(r);
+	return TRUE;
+}
+
+static Boolean eps_basic_hk_tests(void)
+{
+	gom_eps_hk_basic_t telemetry;
+	gom_eps_get_basic_HK_data(&telemetry);
+
+	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[4]);
+	printf("Bat Temperature %d C.\r\n", telemetry.fields.temp[5]);
+	printf("Battery Mode = %d\r\n", telemetry.fields.battmode);
+
+	return TRUE;
+}
+
+Boolean eps_beacon_hk_tests(void)
+{
+	EPS_HK_Data data;
+	if (gom_eps_get_HK(&data)) {
+		printf("vBat: %d\r\n", data.bv);
+		int r = IsisTrxvu_tcSetAx25BeaconDefClSign(0, (unsigned char*)&data, sizeof(data), 30);
+		if (r) {
+			printf("Beacon was started");
+		} else {
+			print_error(r);
 		}
 	}
+
+	return TRUE;
 }
 
-Boolean IsisTRXVUdemoMain(void)
-{
-	if(IsisTRXVUdemoInit())									// initialize of I2C and IsisTRXVU subsystem drivers succeeded?
-	{
-		IsisTRXVUdemoLoop();								// show the main IsisTRXVU demo interface and wait for user input
-		return TRUE;
-	}
-	else
-	{
-		return FALSE;
-	}
-}
+static MenuAction trxvu_menu[] = {
+			{ softResetVUTest, "Soft Reset TRXVU both microcontrollers"},
+			{ hardResetVUTest, "Hard Reset TRXVU both microcontrollers"},
+			{ vutc_sendDefClSignTest, "Default Callsign Send Tes"},
+			{ vutc_toggleIdleStateTest, "Toggle Idle state"},
+			{ vutc_setTxBitrate9600Test, "Change transmission bitrate to 9600 "},
+			{ vutc_setTxBitrate1200Test, "Change transmission bitrate to 1200"},
+			{ vurc_getFrameCountTest, "Get frame count"},
+			{ vurc_getFrameCmdTest, "Get command frame"},
+			{ vurc_getFrameCmdAndTxTest, "Get command frame and retransmit"},
+			{ vurc_getFrameCmdInterruptTest, "(revD) Get command frame by interrupt"},
+			{ vurc_getRxTelemTest_revD, "(revD) Get receiver telemetry"},
+			{ vutc_getTxTelemTest_revD, "(revD) Get transmitter telemetry"},
+			{ vutc_sendInputTest, "Transmit Hex message written by user"},
+			{ SendTextMessage, "Transmit text message written by user" },
+			{ activateResponderTest, "Activate responder" },
+			{ deActivateResponderTest, "Deactivate responder" },
+			{ activateResponderAutoTest, "Activate responder for time interval" },
+			{ responder_set_rssi, "Set Responder RSSI Threshold test"},
+			{ beacon_test, "Beacon Test"},
+			{ clear_beacon_test, "Clear the beacon"},
+			{ eps_basic_hk_tests, "Get EPS Basic HK Data - GOMSpace"},
+			{ eps_beacon_hk_tests, "Send Beacon with HK Data - GOMSpace"},
+			MENU_ITEM_END
+};
 
 Boolean TRXVUtest(void)
 {
-	IsisTRXVUdemoMain();
+	// Assume I2C and IsisTRXVU subsystem drivers already initialized
+	MenuDisplay(trxvu_menu);
 	return TRUE;
 }

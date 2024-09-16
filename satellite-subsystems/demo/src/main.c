@@ -3,20 +3,18 @@
  *      Author: Akhil
  */
 
-#include "Demos/IsisAntSdemo.h"
-#include "Demos/isis_ants2_demo.h"
-#include "Demos/GomEPSdemo.h"
-#include "Demos/IsisSPdemo.h"
-#include "Demos/IsisSPv2demo.h"
-#include "Demos/IsisTRXUVdemo.h"
-#include "Demos/IsisTRXVUdemo.h"
-#include "Demos/IsisMTQv1demo.h"
-#include "Demos/IsisMTQv2demo.h"
-#include "Demos/cspaceADCSdemo.h"
-#include "Demos/ScsGeckoDemo.h"
-#include "Demos/IsisHSTxSdemo.h"
-#include "Demos/isis_eps_demo.h"
-#include "Demos/tausat2_pdhudemo.h"
+#include "tests/gom_eps_tests.h"
+#include "tests/trxvu_tests.h"
+#include "tests/system_c_tests.h"
+#include "tests/beacon_tests.h"
+#include "tests/solar_panel_tests.h"
+#include "tests/antenna_tests.h"
+
+#include "Demos/demos.h"
+
+#include "modules/modules_manager.h"
+#include "utils/menu_selection.h"
+
 #include <satellite-subsystems/version/version.h>
 
 #include <at91/utility/exithandler.h>
@@ -32,15 +30,12 @@
 #include <hal/Utility/util.h>
 #include <hal/Timing/WatchDogTimer.h>
 #include <hal/Drivers/LED.h>
-#include <hal/Drivers/I2C.h>
 #include <hal/Drivers/SPI.h>
 #include <hal/boolean.h>
 #include <hal/version/version.h>
 
-#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
 #define ENABLE_MAIN_TRACES 1
 #if ENABLE_MAIN_TRACES
@@ -57,83 +52,38 @@
 	#define MAIN_TRACE_FATAL		TRACE_FATAL
 #endif
 
+static MenuAction main_menu[] = {
+			{ demo_tests, "Demo Tests"},
+			{ BeaconTests, "Beacon Tests"},
+			{ gom_eps_test, "New GOMSpace Tests"},
+			{ trxvu_tests, "New TRXVU Tests"},
+			{ solar_panels_tests, "Solar Panels Tests" },
+			{ antenna_tests, "Antennas Tests" },
+			{ SystemCTest, "System C Tests"},
+			END_OF_MENU
+};
+
 Boolean selectAndExecuteTest()
 {
-	int selection = 0;
-	Boolean offerMoreTests = TRUE;
-
-	//Initialize the I2C
-	int retValInt = I2C_start(100000, 10);
-	if(retValInt != 0)
-	{
-		TRACE_FATAL("\n\r I2C_start_Master for demo: %d! \n\r", retValInt);
-	}
-
-	printf( "\n\r Select the device to be tested to perform: \n\r");
-	printf("\t 1) TRXVU test \n\r");
-	printf("\t 2) HSTxS Test \n\r");
-	printf("\t 3) AntS test \n\r");
-	printf("\t 4) Solar Panels V2 test \n\r");
-	printf("\t 5) MTQv2 test \n\r");
-	printf("\t 6) ISIS EPS Test \n\r");
-	printf("\t 7) TAUSAT2 PDHU test\n\r");
-
-	while(UTIL_DbguGetIntegerMinMax(&selection, 1, 7) == 0);
-
-	switch(selection)
-	{
-		case 1:
-			offerMoreTests = TRXVUtest();
-			break;
-		case 2:
-			offerMoreTests = HSTxStest();
-			break;
-		case 3:
-			offerMoreTests = AntStest();
-			break;
-		case 4:
-			offerMoreTests = SolarPanelv2test();
-			break;
-		case 5:
-			offerMoreTests = IsisMTQv2test();
-			break;
-		case 6:
-			offerMoreTests = isis_eps__test();
-			break;
-		case 7:
-			offerMoreTests = TAUSAT2PdhuDemoMain();
-			break;
-
-		default:
-			break;
-	}
-
-	return offerMoreTests;
+	printf("\n\tKafr Qar3 QubeSat Flight Software Testing Software\n");
+	MenuDisplay(main_menu);
+	return TRUE;
 }
 
 void taskMain()
 {
-	Boolean offerMoreTests = FALSE;
-
 	WDT_startWatchdogKickTask(10 / portTICK_RATE_MS, FALSE);
 
-	while(1)
-	{
+	mm_init();
+
+	do {
 		LED_toggle(led_1);
+	} while(selectAndExecuteTest());
 
-		offerMoreTests = selectAndExecuteTest();
-
-		if(offerMoreTests == FALSE)
-		{
-			break;
-		}
-	}
-
-	while(1) {
+	for(;;) {
 		LED_toggle(led_1);
 		vTaskDelay(500);
 	}
-
 }
 
 int main()

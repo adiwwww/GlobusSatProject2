@@ -274,7 +274,7 @@ static Boolean manualDeploymentAntSTest(unsigned char index, ISISantsSide side)
 	}
 
     printf( "Select antenna to deploy on side %c (1, 2, 3, 4 or 5 to abort): \n\r", side + 'A');
-    while(UTIL_DbguGetIntegerMinMax(&antennaSelection, 1, 5) == 0);
+    while(UTIL_DbguGetIntegerMinMax(&antennaSelection, 1, 5) == 0){}
 
 	print_error(IsisAntS_attemptDeployment(antennaSystemsIndex, side, antennaSelection-1, isisants_normalDeployment, MANUAL_DEPLOYMENT_TIME));
 	printf( "Waiting %ds. for deployment of antenna %d on side %c\n\r...", MANUAL_DEPLOYMENT_TIME, antennaSelection, side + 'A');
